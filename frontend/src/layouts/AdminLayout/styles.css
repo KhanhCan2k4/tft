@@ -1,0 +1,35 @@
+.admin-layout .admin-nav {
+    animation: appear 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) both;
+}
+
+@keyframes appear {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0.5;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.admin-layout .admin-content {
+    animation: fade 1s ease-in-out;
+}
+
+@keyframes fade {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.admin-layout .logo {
+    background-color: #FFF;
+    margin: 0 40px;
+    padding: 10px 50px 10px 5px;
+    border-radius: 50px;
+}

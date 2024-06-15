@@ -1,0 +1,38 @@
+.tag-back {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100px;
+    height: 100px;
+    background-color: antiquewhite;
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+    z-index: 100;
+}
+
+.tag-back img {
+    margin-top: 5px;
+    margin-left: 5px;
+    width: 50%; 
+    height: 50%;
+}
+
+.tag-back .back-icon {
+    width: 30%;
+    height: 30%;
+    position: relative;
+    left: calc(25% /2);
+    top: calc(25% /2);
+    display: none;
+}
+
+.tag-back:hover {
+    width: 120px;
+    height: 120px;
+}
+.tag-back:hover img {
+    display: none;
+}
+
+.tag-back:hover .back-icon {
+    display: unset;
+}

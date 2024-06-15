@@ -1,0 +1,7 @@
+.detail-post.post-content {
+    min-height: 100vh;
+}
+
+.detail-post.post-content .post .post-content {
+    min-height: 60vh;
+}

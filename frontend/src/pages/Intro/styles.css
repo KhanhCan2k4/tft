@@ -1,0 +1,154 @@
+:root {
+    --box-size: 350px;
+    --rotate-deg: 20deg;
+}
+
+#root {
+    height: 100%;
+}
+
+.intro-box {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    background-image: url("../../../public/src/banners/banner.jpg");
+    background-size: cover;
+    background-position: bottom;
+    perspective: 500px;
+}
+
+.intro-box .box,
+.intro-box .top,
+.intro-box .top-left,
+.intro-box .top-right,
+.intro-box .bottom,
+.intro-box .bottom-left,
+.intro-box .bottom-right
+ {
+    position: fixed;
+    transform-style: preserve-3d;
+    width: var(--box-size);
+    height: var(--box-size);
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, .5);
+    top: calc(45% - var(--box-size) / 2);
+    left: calc(50% - var(--box-size) / 2);
+}
+
+.intro-box .top,
+.intro-box .top-left,
+.intro-box .top-right,
+.intro-box .bottom,
+.intro-box .bottom-left,
+.intro-box .bottom-right {
+    border-radius: 0;
+    z-index: 1;
+    background-color: unset;
+}
+
+.intro-box .box .layer-1,
+.intro-box .box .layer-2,
+.intro-box .box .layer-3 {
+    position: absolute;
+    inset: 0;
+    top: 0;
+    left: 0;
+    background-size: cover;
+}
+
+.intro-box .box .layer-1 {
+    background-image: url("../../../public/src/intros/bg-1.png");
+    transform: translateZ(30px) scale(0.8);
+}
+.intro-box .box .layer-2 {
+    background-image: url("../../../public/src/intros/bg-2.png");
+    transform: translateZ(60px) scale(0.7);
+}
+.intro-box .box .layer-3 {
+    background-image: url("../../../public/src/intros/bg-3.png");
+    transform: translateZ(90px) scale(0.6);
+}
+
+.intro-box .box .foot {
+    position: absolute;
+    bottom: -50px;
+    z-index: -1;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background-image: url("../../../public/src/intros/logo.png");
+    background-repeat: no-repeat;
+    background-color: #FFF;
+    border-radius: 50px;
+    border: 5px solid #FFF;
+    background-size: contain;
+}
+
+.intro-box .top {
+    clip-path: polygon(50% 50%, 20% 0, 80% 0);
+}
+
+.intro-box .top-left {
+    clip-path: polygon(50% 50%, 20% 0, 0 0, 0 50%);
+}
+
+.intro-box .top-right {
+    clip-path: polygon(50% 50%, 100% 50%,  100% 0, 80% 0);
+}
+
+.intro-box .bottom {
+    clip-path: polygon(50% 50%, 20% 100%, 80% 100%);
+}
+
+.intro-box .bottom-left {
+    clip-path: polygon(50% 50%, 20% 100%, 0 100%, 0 50%);
+}
+
+.intro-box .bottom-right {
+    clip-path: polygon(50% 50%, 100% 50%, 100% 100%, 80% 100%);
+}
+
+.intro-box .top:hover ~ .box {
+    transform: rotateX(var(--rotate-deg));
+}
+
+.intro-box .top-left:hover ~ .box {
+    transform: rotateX(var(--rotate-deg)) rotateY(calc(var(--rotate-deg) * -1));
+}
+
+.intro-box .top-right:hover ~ .box {
+    transform: rotateX(var(--rotate-deg)) rotateY(calc(var(--rotate-deg)));
+}
+
+.intro-box .bottom:hover ~ .box {
+    transform: rotateX(calc(var(--rotate-deg) * -1));
+}
+
+.intro-box .bottom-left:hover ~ .box {
+    transform:rotateX(calc(var(--rotate-deg) * -1)) rotateY(calc(var(--rotate-deg) * -1));
+}
+
+.intro-box .bottom-right:hover ~ .box {
+    transform:rotateX(calc(var(--rotate-deg) * -1)) rotateY(calc(var(--rotate-deg)));
+}
+
+.intro-box .lights .light {
+    position: fixed;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #ffc400;
+    mix-blend-mode: overlay;
+    animation: uplight 3s;
+}
+
+@keyframes uplight {
+    0% {
+        top: calc(100% + 200px);
+        opacity: 1;
+    }
+    100% {
+        top: -200px;
+        opacity: 0;
+    }
+}

@@ -1,0 +1,88 @@
+.honor-content {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.honor-content .title {
+    position: absolute;
+    top: 0;
+    height: 100px;
+    z-index: 4;
+    display: block;
+    width: 100%;
+    text-align: center;
+    line-height: 100px;
+}
+
+.honor-content .honor-class {
+    margin-top: var(--nav-bar-height);
+    padding: 30px 0;
+    height: 60vh;
+    border-radius: 20px;
+    position: relative;
+    animation: 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes uppear {
+    0% {
+        transform: translateX(-120%) translateY(-120%);
+    }
+    100% {
+        transform: translateX(0%) translateY(0%);
+    }
+}
+
+@keyframes back {
+    0% {
+        opacity: 1;
+    }
+    40% {
+        opacity: 0;
+        transform: translateX(120%);
+    }
+    60% {
+        transform: translateX(-120%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes next {
+    0% {
+        opacity: 1;
+    }
+    40% {
+        opacity: 0;
+        transform: translateX(-120%);
+    }
+    60% {
+        transform: translateX(120%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.honor-content .honor-class h2 {
+    position: absolute;
+    bottom: 100px;
+    padding-bottom: 50px;
+    text-align: center;
+    width: 100%;
+    left: 0;
+    color: white;
+    font-weight: bolder;
+}
+
+.honor-content .honor-class.next {
+    animation-name: next;
+    animation-duration: 2s;
+}
+.honor-content .honor-class.back {
+    animation-name: back;
+    animation-duration: 2s;
+}
