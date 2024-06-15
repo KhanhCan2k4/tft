@@ -1,0 +1,16 @@
+.about-page {
+    background-color: transparent;
+}
+
+.about-page .title {
+    margin-top: 50px;
+    width: 100%;
+    text-align: center;
+}
+
+.about-page .contact-form {
+    box-shadow: 9px 8px 7px 0px rgba(0,0,0,0.48);
+    -webkit-box-shadow: 9px 8px 7px 0px rgba(0,0,0,0.48);
+    -moz-box-shadow: 9px 8px 7px 0px rgba(0,0,0,0.48);
+    background-image: linear-gradient(45deg, rgb(0, 0, 33), white, rgb(171, 157, 157));
+}

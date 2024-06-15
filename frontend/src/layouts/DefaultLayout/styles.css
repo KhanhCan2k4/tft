@@ -1,0 +1,4 @@
+.default-layout .main-content .container {
+    padding-top: calc(var(--nav-bar-height) * 2);
+    min-height: 100vh;
+}

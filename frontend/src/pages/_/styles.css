@@ -1,0 +1,461 @@
+.stack-home {}
+
+.stack-home .nav-stack-header img.logo {
+    background-color: #fff;
+    padding: 5px;
+    padding-right: 25px;
+    border-radius: 30px;
+    position: relative;
+    box-shadow: -1px 1px 4px 0px rgba(0,0,0,0.75);
+}
+
+.stack-home .nav-stack-header img.logo::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-color: #fff;
+    z-index: 3;
+    animation: spark 0.5s infinite;
+}
+
+@keyframes spark {
+    0% {
+        scale: 1;
+        opacity: 1;
+    }
+
+    100% {
+        scale: 1.5;
+        opacity: 0;
+    }
+}
+
+.stack-home section.stack-section {
+    height: 100vh;
+    margin: 0 20px;
+    transform: translateX(5px);
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    box-shadow: 0px -3px 10px -1px rgba(0, 0, 0, 0.75);
+    -webkit-box-shadow: 0px -3px 10px -1px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px -3px 10px -1px rgba(0, 0, 0, 0.75);
+    animation: stackUppearance 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55) backwards;
+    transition: display 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    display: none;
+}
+
+.stack-home section.intro-section {
+    background-image: url("../../../public/src/backgrounds/intro-bg.jpg");
+}
+
+.stack-home section.intro-section .banner {
+    animation: uppear 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.stack-home section.intro-section .text-container {
+    animation: fromLeft 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) backwards;
+}
+
+.stack-home section.intro-section .text-container h3,
+.stack-home section.intro-section .text-container h6,
+.stack-home section.intro-section .text-container b {
+    animation: textFade 2s .5s cubic-bezier(0.68, -0.55, 0.265, 1.55) backwards;
+}
+
+.stack-home section.intro-section .sub-contain .sub-item {
+    animation: textFade 2s .5s cubic-bezier(0.68, -0.55, 0.265, 1.55) backwards, uppear 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes textFade {
+    0% {
+        color: transparent;
+    }
+    100% {
+        color: unset;
+    }
+}
+
+@keyframes fromLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(120%);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.stack-home .item-page .banner .carousel-banner {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    border-radius: 10px;
+    box-shadow: -25px 23px 5px 0px rgba(0, 0, 0, 0.58);
+    -webkit-box-shadow: -25px 23px 5px 0px rgba(0, 0, 0, 0.58);
+    -moz-box-shadow: -25px 23px 5px 0px rgba(0, 0, 0, 0.58);
+}
+
+.stack-home .item-page .banner .carousel-banner img,
+.stack-home .item-page .banner .carousel-banner picture,
+.stack-home .item-page .banner .carousel-banner video {
+    width: 100%;
+    border-radius: 10px;
+    height: var(--banner-height);
+}
+
+.stack-home .home-section .banner-container .logos .logo {
+    z-index: 100;
+}
+
+.stack-home section.intro-section .btn-view {
+    position: unset;
+    margin-left: 10px;
+    background-color: rgb(235, 58, 87);
+}
+
+.stack-home section.intro-section .text-container {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    padding: 10px;
+}
+
+.stack-home section.intro-section .sub-contain {
+    perspective: 500px;
+}
+
+.stack-home section.intro-section .sub-item {
+    min-height: 100px;
+    width: 100%;
+    border-radius: 5px;
+    word-wrap: none;
+    text-align: center;
+    width: 100%;
+    background-color: white;
+    margin: 0 10px;
+    transform: rotateX(30deg);
+    box-shadow: -13px 12px 20px 0px rgba(0, 0, 0, 0.58);
+    -webkit-box-shadow: -13px 12px 20px 0px rgba(0, 0, 0, 0.58);
+    -moz-box-shadow: -13px 12px 20px 0px rgba(0, 0, 0, 0.58);
+}
+
+.stack-home section.intro-section .sub-item:hover {
+    transform: rotateX(0deg) rotateY(20deg) translateZ(100px);
+    z-index: 4;
+}
+
+.stack-home section.intro-section .sub-item.reverse:hover {
+    transform: rotateX(0deg) rotateY(-20deg) translateZ(100px);
+}
+
+.stack-home section .btn-view {
+    text-decoration: none;
+    color: white;
+    background-color: var(--app-btn-color);
+    padding: 10px 30px;
+    border-radius: 20px;
+    font-weight: bold;
+    box-shadow: -1px 6px 22px -1px rgba(0, 0, 0, 0.75);
+}
+
+.stack-home section .btn-view:hover {
+    transform: translateY(-10px) translateZ(10px);
+    box-shadow: -14px 19px 22px -1px rgba(0, 0, 0, 0.75);
+    -webkit-box-shadow: -14px 19px 22px -1px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: -14px 19px 22px -1px rgba(0, 0, 0, 0.75);
+}
+
+@keyframes stackUppearance {
+    0% {
+        transform: translateY(100vh);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.stack-home section.stack-section.show {
+    display: block;
+}
+
+.stack-home .nav-stack-header button.nav-button {
+    font-weight: bold;
+}
+
+.stack-home .nav-stack-header button.nav-button.active {
+    animation: hoverUp 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) alternate;
+}
+
+@keyframes hoverUp {
+    100% {
+        scale: 1.2;
+    }
+}
+
+.stack-home .nav-stack-header {
+    position: relative;
+    z-index: 3;
+    background-color: transparent;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    animation: sliceNav 1s 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) backwards;
+}
+
+@keyframes sliceNav {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.stack-home .home-section {
+    position: relative;
+    z-index: -1;
+    animation: uppear 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes uppear {
+    0% {
+        opacity: 0;
+        scale: 0;
+    }
+
+    100% {
+        opacity: 1;
+        scale: 1;
+    }
+}
+
+.stack-home .home-section .banner-container {
+    position: fixed;
+    top: 20vh;
+    width: 100%;
+    min-height: 80vh;
+}
+
+.stack-home .home-section .banner-container img {
+    position: absolute;
+    width: 100%;
+    height: auto;
+    z-index: -2;
+    bottom: 0;
+    background-position: left bottom;
+    transition: 1s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+}
+
+.stack-home .home-section .title {
+    position: absolute;
+    left: 0;
+    bottom: 40%;
+    text-align: left;
+    color: #fff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 20px;
+    background-color: rgba(100, 92, 92, 0.5);
+    padding: 10px 10px 10px 40px;
+    border-radius: 10px;
+    animation: upBox 1s 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) backwards;
+}
+
+@keyframes upBox { 
+    0% {
+        transform: translate(-200%, -100%);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+}
+
+.stack-home .home-section .title span {
+    position: relative;
+    left: -40px;
+    padding: 10px;
+}
+
+.stack-home .home-section .title b {
+    font-size: 1.5em;
+    color: #fff;
+    font-weight: 400;
+    font-family: "Bevan", serif;
+    font-style: normal;
+}
+
+.stack-home .home-section .logos {
+    width: 100%;
+    height: 100%;
+}
+
+.stack-home:has(.nav-stack-header button.nav-button) footer {
+    display: none;
+}
+
+.stack-home:has(.nav-stack-header button.nav-button.active) footer {
+    display: unset;
+}
+
+.stack-home section {
+    backdrop-filter: blur(20px);
+}
+
+.stack-home section.intro-section {
+    background-image: url("../../../public/src/backgrounds/intro-bg.jpg");
+}
+
+.stack-home section.posts-section .post-card,
+.stack-home section.posts-section .post-card.go {
+    animation: postSlide 1s cubic-bezier(0.68, -0.55, 0.265, 1.55), unmount-fade 1s 4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes unmount-fade {
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes postSlide {
+    0% {
+        opacity: 0;
+        transform: translateX(-10%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* MARK:WAVE */
+.stack-home .stack-wave {
+    position: relative;
+    width: 100%;
+    height: 150px;
+    transform: translateY(-100%);
+}
+
+.stack-home .stack-wave.first {
+    background-color: unset;
+}
+
+.stack-home .waveWrapper {
+    overflow: hidden;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    margin: auto;
+}
+
+.stack-home .waveWrapperInner {
+    position: absolute;
+    width: 100%;
+    overflow: hidden;
+    height: 100%;
+    bottom: -1px;
+    background-color: transparent;
+    /* background-image: linear-gradient(to top, #86377b 20%, #27273c 80%); */
+}
+
+.stack-home .bgTop {
+    z-index: 15;
+    opacity: 0.5;
+}
+
+.stack-home .bgMiddle {
+    z-index: 10;
+    opacity: 0.75;
+}
+
+.stack-home .bgBottom {
+    z-index: 5;
+}
+
+.stack-home .wave {
+    position: absolute;
+    left: 0;
+    width: 200%;
+    height: 100%;
+    background-repeat: repeat no-repeat;
+    background-position: 0 bottom;
+    transform-origin: center bottom;
+}
+
+.stack-home .waveTop {
+    background-size: 50% 100px;
+}
+
+.stack-home .waveAnimation .waveTop {
+    animation: move-wave 3s;
+    -webkit-animation: move-wave 3s;
+    -webkit-animation-delay: 1s;
+    animation-delay: 1s;
+}
+
+.stack-home .waveMiddle {
+    background-size: 50% 120px;
+}
+
+.stack-home .waveAnimation .waveMiddle {
+    animation: move_wave 10s linear infinite;
+}
+
+.stack-home .waveBottom {
+    background-size: 50% 100px;
+}
+
+.stack-home .waveAnimation .waveBottom {
+    animation: move_wave 15s linear infinite;
+}
+
+@keyframes move_wave {
+    0% {
+        transform: translateX(0) translateZ(0) scaleY(1)
+    }
+
+    50% {
+        transform: translateX(-25%) translateZ(0) scaleY(0.55)
+    }
+
+    100% {
+        transform: translateX(-50%) translateZ(0) scaleY(1)
+    }
+}
+
+/* END:WAVE */
+
+.stack-home .stack-container .stack-wave {
+    position: absolute;
+    width: 100%;
+    height: 150px;
+    top: -150px;
+    left: 0;
+    z-index: 5;
+}
+
+.stack-home .stack-container .post-card.go {
+    animation: go 2.5s alternate infinite;
+}
+
+.stack-home #trang-chu {
+    background-image: url("../../../public/src/bg_pattern.png");
+}
+
+@keyframes go {
+    100% {
+        transform: translateX(20px) rotateY(20deg) rotateX(5deg);
+    }
+}

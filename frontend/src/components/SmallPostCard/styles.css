@@ -1,0 +1,9 @@
+.card.small-post-card {
+    animation: uppear 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    background-color: transparent;
+    min-height: 250px;
+}
+
+.card.small-post-card:hover {
+    transform: translateY(-10px);
+}

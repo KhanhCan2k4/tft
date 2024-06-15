@@ -1,0 +1,33 @@
+.blockquote{
+    border-left: 4px solid #FF3152;
+    position: relative;
+    background-color: rgba(155, 155, 155, 0.05);
+    color: #000;
+    font-style: normal;
+    padding: 20px 25px;
+    margin: 0;
+    border-radius: 3px;
+}
+.blockquote::before, .blockquote::after{
+    font-family: 'Font Awesome 5 Free';
+}
+.blockquote::before{
+    position: absolute;
+    content: '\f10e';
+    left: 10px;
+    top: 10px;
+    font-size: 33px;
+    font-style: normal;
+    font-weight: 900;
+    opacity: .05;
+    line-height: 1;
+}
+.blockquote::after{
+    position: absolute;
+    content: '\f10e';
+    font-style: normal;
+    display: inline-block;
+    font-weight: 900;
+    color: #aaa;
+    margin: 0 0 0 10px;
+}

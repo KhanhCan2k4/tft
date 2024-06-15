@@ -1,0 +1,92 @@
+[
+    {
+      "id": 1,
+      "content": "Great post! I completely agree with the points mentioned.",
+      "author": 1,
+      "likes": 15,
+      "dislikes": 2,
+      "created_at": "2024-04-14T10:00:00Z",
+      "updated_at": null
+    },
+    {
+      "id": 2,
+      "content": "I found this article very informative. Thank you for sharing!",
+      "author": 2,
+      "likes": 8,
+      "dislikes": 0,
+      "created_at": "2024-04-14T10:15:00Z",
+      "updated_at": null
+    },
+    {
+      "id": 3,
+      "content": "This topic is very relevant to me as a student. Thanks for addressing it!",
+      "author": 3,
+      "likes": 10,
+      "dislikes": 1,
+      "created_at": "2024-04-14T10:30:00Z",
+      "updated_at": null
+    },
+    {
+      "id": 4,
+      "content": "I have a different perspective on this issue. I think...",
+      "author": 4,
+      "likes": 5,
+      "dislikes": 3,
+      "created_at": "2024-04-14T10:45:00Z",
+      "updated_at": null
+    },
+    {
+      "id": 5,
+      "content": "Interesting discussion! I'd love to hear more opinions on this.",
+      "author": 5,
+      "likes": 12,
+      "dislikes": 0,
+      "created_at": "2024-04-14T11:00:00Z",
+      "updated_at": null
+    },
+    {
+      "id": 6,
+      "content": "I'm not sure I agree with the points made in this post.",
+      "author": 6,
+      "likes": 3,
+      "dislikes": 6,
+      "created_at": "2024-04-14T11:15:00Z",
+      "updated_at": null
+    },
+    {
+      "id": 7,
+      "content": "This article really resonated with me. Well-written!",
+      "author": 7,
+      "likes": 20,
+      "dislikes": 1,
+      "created_at": "2024-04-14T11:30:00Z",
+      "updated_at": null
+    },
+    {
+      "id": 8,
+      "content": "I have a similar experience to share regarding this topic.",
+      "author": 8,
+      "likes": 6,
+      "dislikes": 0,
+      "created_at": "2024-04-14T11:45:00Z",
+      "updated_at": null
+    },
+    {
+      "id": 9,
+      "content": "I appreciate the insights provided in this post. Thank you!",
+      "author": 9,
+      "likes": 18,
+      "dislikes": 2,
+      "created_at": "2024-04-14T12:00:00Z",
+      "updated_at": null
+    },
+    {
+      "id": 10,
+      "content": "As a student, I can relate to the challenges discussed in this article.",
+      "author": 10,
+      "likes": 9,
+      "dislikes": 1,
+      "created_at": "2024-04-14T12:15:00Z",
+      "updated_at": null
+    }
+  ]

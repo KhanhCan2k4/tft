@@ -1,0 +1,102 @@
+[
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "email_verified_at": "2024-04-14T12:00:00Z",
+      "password": "password123",
+      "remember_token": "abc123",
+      "created_at": "2024-04-14T10:00:00Z",
+      "updated_at": "2024-04-14T10:00:00Z"
+    },
+    {
+      "id": 2,
+      "name": "Jane Smith",
+      "email": "jane.smith@example.com",
+      "email_verified_at": "2024-04-14T12:00:00Z",
+      "password": "password456",
+      "remember_token": "def456",
+      "created_at": "2024-04-14T10:30:00Z",
+      "updated_at": "2024-04-14T10:30:00Z"
+    },
+    {
+      "id": 3,
+      "name": "Alice Johnson",
+      "email": "alice.johnson@example.com",
+      "email_verified_at": "2024-04-14T12:00:00Z",
+      "password": "password789",
+      "remember_token": "ghi789",
+      "created_at": "2024-04-14T11:00:00Z",
+      "updated_at": "2024-04-14T11:00:00Z"
+    },
+    {
+      "id": 4,
+      "name": "Bob Brown",
+      "email": "bob.brown@example.com",
+      "email_verified_at": "2024-04-14T12:00:00Z",
+      "password": "passwordabc",
+      "remember_token": "jkl123",
+      "created_at": "2024-04-14T11:30:00Z",
+      "updated_at": "2024-04-14T11:30:00Z"
+    },
+    {
+      "id": 5,
+      "name": "Emily Davis",
+      "email": "emily.davis@example.com",
+      "email_verified_at": "2024-04-14T12:00:00Z",
+      "password": "passworddef",
+      "remember_token": "mno456",
+      "created_at": "2024-04-14T12:00:00Z",
+      "updated_at": "2024-04-14T12:00:00Z"
+    },
+    {
+      "id": 6,
+      "name": "Michael Wilson",
+      "email": "michael.wilson@example.com",
+      "email_verified_at": "2024-04-14T12:00:00Z",
+      "password": "passwordghi",
+      "remember_token": "pqr789",
+      "created_at": "2024-04-14T12:30:00Z",
+      "updated_at": "2024-04-14T12:30:00Z"
+    },
+    {
+      "id": 7,
+      "name": "Sophia Lee",
+      "email": "sophia.lee@example.com",
+      "email_verified_at": "2024-04-14T12:00:00Z",
+      "password": "passwordjkl",
+      "remember_token": "stu123",
+      "created_at": "2024-04-14T13:00:00Z",
+      "updated_at": "2024-04-14T13:00:00Z"
+    },
+    {
+      "id": 8,
+      "name": "Daniel Martinez",
+      "email": "daniel.martinez@example.com",
+      "email_verified_at": "2024-04-14T12:00:00Z",
+      "password": "passwordmno",
+      "remember_token": "vwx456",
+      "created_at": "2024-04-14T13:30:00Z",
+      "updated_at": "2024-04-14T13:30:00Z"
+    },
+    {
+      "id": 9,
+      "name": "Olivia Taylor",
+      "email": "olivia.taylor@example.com",
+      "email_verified_at": "2024-04-14T12:00:00Z",
+      "password": "passwordpqr",
+      "remember_token": "yz789",
+      "created_at": "2024-04-14T14:00:00Z",
+      "updated_at": "2024-04-14T14:00:00Z"
+    },
+    {
+      "id": 10,
+      "name": "Matthew Anderson",
+      "email": "matthew.anderson@example.com",
+      "email_verified_at": "2024-04-14T12:00:00Z",
+      "password": "passwordstu",
+      "remember_token": "123abc",
+      "created_at": "2024-04-14T14:30:00Z",
+      "updated_at": "2024-04-14T14:30:00Z"
+    }
+  ]
