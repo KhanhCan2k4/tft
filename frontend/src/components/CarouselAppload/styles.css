@@ -1,0 +1,45 @@
+.my-carousel-appload {
+    perspective: 500px;
+}
+
+.my-carousel-appload .carousel-item {
+    transform-style: preserve-3d;
+}
+
+.my-carousel-appload .carousel-control-prev {
+    transform: translateX(-100px);
+}
+
+.my-carousel-appload .carousel-control-next {
+    transform: translateX(100px);
+}
+
+.my-carousel-appload::before,
+.my-carousel-appload::after
+ {
+    content: '';
+    position: absolute;
+    width: 70%;
+    height: 100%;
+    scale: 0.7;
+    background-color: #ccc;
+    z-index: -1;
+    opacity: 0.4;
+    filter: blur(20px);
+    left: -50%;
+    top: 0;
+    transform: rotateY(15deg);
+    animation: spin 3s 3s linear infinite;
+}
+
+.my-carousel-appload::after {
+    left: unset;
+    right: -50%;
+    transform: rotateY(-15deg);
+}
+
+@keyframes spin {
+    100% {
+        transform: translateX(10px);
+    }
+}

@@ -1,0 +1,29 @@
+.post-card {
+    transition: 2s;
+}
+
+.post-card .card {
+    border-top-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    padding: 20px;
+    background-color: transparent;
+    border: 2px solid teal;
+}
+
+.post-card .card img {
+    border-top-left-radius: 30px;
+}
+
+.post-card .card .card-body {
+    background-color: rgba(255, 255, 255, 1);
+    border-bottom-right-radius: 30px;
+}
+
+.post-card .card .card-title {
+   height: 30px;
+   overflow: hidden;
+}
+
+.post-card .card .btn-view {
+    border-bottom-right-radius: 20px;
+}

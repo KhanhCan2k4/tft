@@ -1,0 +1,66 @@
+.admin-posts .pagination>li>span {
+  border: 1px solid teal;
+  color: teal;
+  cursor: pointer;
+}
+
+.admin-posts .pagination>li.active>span {
+  background: teal;
+  color: #FFF;
+  cursor: pointer;
+}
+
+.admin-posts .pagination .sub-link {
+  background: black;
+  color: #FFF;
+}
+
+.admin-posts .pagination .sub-link:hover {
+  background: rgba(125, 161, 146, 0.7);
+}
+
+.filterIcon {
+  position: relative;
+  transition: 1s;
+
+}
+
+.filterIcon::after {
+  content: '';
+  position: absolute;
+  top: 95%;
+  right: -1px;
+  width: 43px;
+  height: 20px;
+  border-radius: 20% 20% 0 0;
+  clip-path: polygon(0% 0%, 100% 0, 80% 25%, 80% 55%, 95% 70%, 100% 100%, 0 100%, 5% 70%, 20% 55%, 20% 25%);
+  background-color: teal;
+  transition: 0.5s;
+  opacity: 0;
+}
+
+.filterIcon.active::after {
+  /* height: 25px; */
+  opacity: 1;
+}
+
+.tags-filter {
+  transition: 0.5s;
+  position: relative;
+  display: inline-block;
+  padding-left: 20px;
+  background-color: teal;
+  border-radius: 12px;
+  color: #FFF;
+  font-size: 0px;
+  text-align: start;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+}
+
+.tags-filter.active {
+  font-size: 20px;
+  opacity: 1;
+  max-height: 200px;
+}

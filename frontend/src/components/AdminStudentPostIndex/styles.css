@@ -1,0 +1,20 @@
+.admin-enroll-posts .pagination>li>span {
+    border: 1px solid teal;
+    color: teal;
+    cursor: pointer;
+  }
+  
+  .admin-enroll-posts .pagination>li.active>span {
+    background: teal;
+    color: #FFF;
+    cursor: pointer;
+  }
+  
+  .admin-enroll-posts .pagination .sub-link {
+    background: black;
+    color: #FFF;
+  }
+  
+  .admin-enroll-posts .pagination .sub-link:hover {
+    background: rgba(125, 161, 146, 0.7);
+  }

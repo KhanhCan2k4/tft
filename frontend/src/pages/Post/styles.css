@@ -1,0 +1,39 @@
+.post-content {
+    background-image: url("../../../public/src/bg_pattern.png");
+    padding-left: unset;
+    padding-right: unset;
+}
+
+.post-content .posts .post:hover {
+    transform: translateY(-20px);
+}
+
+.post-content .filter-posts button {
+    font-style: italic;
+}
+
+.post-content .filter-posts button.btn:not(.active) {
+    animation: backNormal .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes backNormal {
+    0% {
+        scale: 1.2;
+    }
+    100% {
+        scale: 1;
+    }
+}
+
+.post-content .filter-posts button.btn.active {
+    animation: hoverUp .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    font-weight: bolder;
+}
+
+.post-content .posts {
+    min-height: 30vh;
+}
+
+.post-content .posts .post {
+    animation: uppear 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
