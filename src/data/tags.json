@@ -1,0 +1,52 @@
+[
+    {
+      "id": 1,
+      "name": "Student Life",
+      "author": 1
+    },
+    {
+      "id": 2,
+      "name": "Academic Excellence",
+      "author": 2
+    },
+    {
+      "id": 3,
+      "name": "Educational Resources",
+      "author": 3
+    },
+    {
+      "id": 4,
+      "name": "Campus Events",
+      "author": 4
+    },
+    {
+      "id": 5,
+      "name": "Career Development",
+      "author": 5
+    },
+    {
+      "id": 6,
+      "name": "Student Organizations",
+      "author": 6
+    },
+    {
+      "id": 7,
+      "name": "College Success Tips",
+      "author": 7
+    },
+    {
+      "id": 8,
+      "name": "Education Technology",
+      "author": 8
+    },
+    {
+      "id": 9,
+      "name": "Research Opportunities",
+      "author": 9
+    },
+    {
+      "id": 10,
+      "name": "Community Engagement",
+      "author": 10
+    }
+  ]

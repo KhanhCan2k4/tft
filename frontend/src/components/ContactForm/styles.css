@@ -1,0 +1,55 @@
+.contact-form {
+    padding: 50px;
+    border-radius: 30px;
+    backdrop-filter: blur(15px);
+    background-color: white;
+    color: black;
+    box-shadow: -2px 1px 5px 0px rgba(0, 0, 0, 0.75);
+    position: relative;
+}
+
+.contact-form input,
+.contact-form textarea {
+    background-color: transparent;
+    box-shadow: 3px 3px 3px 0px rgba(0, 0, 0, 0.15) inset;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 15px;
+    border: none;
+    color: black;
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+    color: black;
+    
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    background-color: rgb(255, 255, 255);
+    color: darkblue;
+}
+
+
+.contact-form .btn-view {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    text-decoration: none;
+    color: white;
+    background-color: darkblue;
+    padding: 10px 30px;
+    border-radius: 20px;
+    font-weight: bold;
+    box-shadow: -1px 6px 22px -1px rgba(0, 0, 0, 0.75);
+    -webkit-box-shadow: -1px 6px 22px -1px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: -1px 6px 22px -1px rgba(0, 0, 0, 0.75);
+}
+
+.contact-form .btn-view:hover {
+    transform: translateY(-10px) translateZ(10px);
+    box-shadow: -14px 19px 22px -1px rgba(0, 0, 0, 0.75);
+    -webkit-box-shadow: -14px 19px 22px -1px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: -14px 19px 22px -1px rgba(0, 0, 0, 0.75);
+}

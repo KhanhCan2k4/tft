@@ -1,0 +1,100 @@
+.stack-index {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+}
+
+.stack-index .intro-video {
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+    text-align: center;
+}
+
+.stack-index .intro-video video {
+    position: relative;
+    object-fit: cover;
+    width: 100%;
+    height: auto;
+    z-index: -1;
+}
+
+.stack-index .stack-nav {
+    backdrop-filter: blur(10px);
+    animation: navSlideDown 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) both;
+}
+
+@keyframes navSlideDown {
+    0% {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.stack-index .stack-nav button {
+    color: white;
+    background-color: rgba(204, 204, 204, .4);
+}
+
+.stack-index .stack-nav button.active,
+.stack-index .stack-nav button:hover {
+    background-color: black;
+    font-weight: bold;
+    border: none;
+}
+
+.stack-index .stack-nav .logo {
+    box-shadow: 1px 1px 2px 2px rgba(204, 204, 204, 0.2);
+    background-color: #fff;
+    border-radius: 30px;
+    padding: 5px 30px 5px 5px;
+}
+
+.stack-index .stack-nav .logo:hover {
+    scale: 1.2;
+    rotate: 5deg;
+}
+
+.stack-index section.stack-section {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    padding-top: 20px;
+    top: 15vh;
+    min-height: 85vh;
+    transform: translateY(100%);
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    box-shadow: 0px -3px 10px -1px rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(10px);
+    display: none;
+}
+
+@keyframes showStackSection {
+    0% {
+        display: none;
+        transform: translateY(100%);
+    }
+    100% {
+        display: block;
+        transform: translateY(0);
+    }
+}
+
+.stack-index section.stack-section.show {
+    transform: translateY(0);
+    display: block;
+    animation: showStackSection .7s cubic-bezier(0.68, -0.55, 0.265, 1.55) both;
+}
+
+.stack-index section.stack-section.home-section {
+    backdrop-filter: none;
+    z-index: 1;
+}
