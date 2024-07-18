@@ -207,7 +207,7 @@ function Login() {
                   <div className="input-group mb-3">
                     <button
                       onClick={handleLogin}
-                      className="btn btn-lg btn-dark w-100 fs-6"
+                      className="btn btn-lg w-100 fs-6"
                     >
                       Login
                     </button>

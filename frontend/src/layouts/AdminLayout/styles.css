@@ -5,11 +5,10 @@
 @keyframes appear {
     0% {
         transform: translateX(-100%);
-        opacity: 0.5;
     }
+
     100% {
         transform: translateX(0);
-        opacity: 1;
     }
 }
 
@@ -28,8 +27,9 @@
 }
 
 .admin-layout .logo {
-    background-color: #FFF;
-    margin: 0 40px;
-    padding: 10px 50px 10px 5px;
-    border-radius: 50px;
+    scale: 0.7;
+}
+
+.admin-layout .admin-btn-nav {
+    cursor: pointer;
 }

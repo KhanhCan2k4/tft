@@ -1,28 +1,25 @@
-import MultipleSelectTags from "../../../components/ChooseTag";
 import "./styles.css";
-import Comment from "../../../components/Comment";
 import Threat from "../../../components/Threat";
 import { Toast } from "primereact/toast";
 import { useEffect, useRef, useState } from "react";
-import { CloseButton, Modal, ModalBody } from "react-bootstrap";
-import { apiURL, imageURL } from "../../../App";
+import { TFT_THREATS, apiURL, imageURL } from "../../../App";
 import { TFT_REMEMBER_TOKEN } from "../../Admin/Login";
-import { Avatar, Chip } from "@mui/material";
+import { Chip } from "@mui/material";
+import { Button, Card } from "antd";
+import { PersonBoundingBox, PersonCircle } from "react-bootstrap-icons";
 
 export default function ForumSubPage() {
   //refs
-  const btnAdd = useRef();
   const passRef = useRef();
   const newPassRef = useRef();
   const mssvRef = useRef();
-  const commentRef = useRef();
   const toast = useRef();
+  const myThreatCard = useRef();
+  const avatarRef = useRef();
 
   //states
   const [show, setShow] = useState(false);
-  const [showEdit, setShowEdit] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
-  const [isFirst, setIsFirst] = useState(false);
   const [threat, setThreat] = useState({ content: "", tags: [] });
 
   const [user, setUser] = useState();
@@ -33,6 +30,10 @@ export default function ForumSubPage() {
   //effects
   useEffect(() => {
     getThreats();
+  }, []);
+
+  useEffect(() => {
+    document.title = "Cộng đồng TFT - Giải đáp thắc mắc";
   }, []);
 
   function getThreats() {
@@ -82,19 +83,6 @@ export default function ForumSubPage() {
   useEffect(() => {
     checkLogin();
   }, []);
-
-  //handles
-  const handleShowAddFrame = (e) => {
-    if (btnAdd.current.className.includes("show")) {
-      //hide
-      btnAdd.current.className =
-        "btn-add btn btn-dark bi bi-arrow-up-right-circle-fill";
-    } else {
-      //show
-      btnAdd.current.className =
-        "btn-add btn btn-danger bi bi-arrow-down-left-circle-fill show";
-    }
-  };
 
   const handleLogin = () => {
     //validate
@@ -148,55 +136,90 @@ export default function ForumSubPage() {
       });
   };
 
-  const handelComment = (e) => {
-    const comment = commentRef.current.value;
-    commentRef.current.value = "";
-
+  const handleLogout = (e) => {
     const token = localStorage.getItem(TFT_REMEMBER_TOKEN);
+    localStorage.removeItem(TFT_REMEMBER_TOKEN);
 
-    const api = apiURL + "comments";
+    const api = apiURL + "tokens/" + token;
 
     fetch(api, {
-      method: "POST",
+      method: "DELETE",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        content: comment,
-        token: token,
-        threat: activeThreat.id,
-      }),
-    }).finally(() => {
-      getThreats();
     });
-  };
 
-  const handleForgetPassWord = (e) => {};
-
-  const handleClose = (e) => {
-    setShow(false);
-    setIsFirst(false);
-  };
-
-  const handleLogout = (e) => {
-    localStorage.removeItem(TFT_REMEMBER_TOKEN);
     setIsLogin(false);
     setUser(null);
     setShow(false);
   };
 
-  const handleChangePass = (e) => {};
-
   const handlePostAThreat = () => {
-    handleShowAddFrame();
-
     const api = apiURL + "threats";
+
+    if (threat && !threat.content) {
+      toast?.current?.show({
+        severity: "error",
+        summary: "Đăng câu hỏi",
+        detail: "Bạn chưa nhập nội dung. Vui lòng thử lại",
+        life: 3000,
+      });
+      return;
+    }
+
+    if (threat && threat.content && threat.content.length < 15) {
+      toast?.current?.show({
+        severity: "error",
+        summary: "Đăng câu hỏi",
+        detail:
+          "Câu hỏi có nội dung quá ngắn (dưới 15 ký tự). Vui lòng thử lại",
+        life: 3000,
+      });
+      return;
+    }
 
     fetch(api, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(threat),
-    }).finally(() => {
-      getThreats();
-    });
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === 200) {
+          toast?.current?.show({
+            severity: "success",
+            summary: "Đăng câu hỏi",
+            detail: "Đăng câu hỏi thành công",
+            life: 10000,
+          });
+
+          const threats = JSON.parse(localStorage.getItem(TFT_THREATS)) ?? [];
+          threats.push(data.threat.id);
+
+          localStorage.setItem(TFT_THREATS, JSON.stringify(threats));
+
+          myThreatCard.current.scrollTop = 0;
+        } else {
+          toast?.current?.show({
+            severity: "error",
+            summary: "Đăng câu hỏi",
+            detail:
+              "Đăng câu hỏi không thành công. Câu hỏi của bạn có chứa nhiều từ ngữ nhạy cảm, vui lòng thử lại",
+            life: 3000,
+          });
+        }
+      })
+      .catch(() => {
+        toast?.current?.show({
+          severity: "error",
+          summary: "Đăng câu hỏi",
+          detail:
+            "Đăng câu hỏi không thành công. Câu hỏi của bạn có chứa nhiều từ ngữ nhạy cảm, vui lòng thử lại",
+          life: 3000,
+        });
+      })
+      .finally(() => {
+        setThreat({ ...threat, content: "" });
+        getThreats();
+      });
   };
 
   const handleResetPass = () => {
@@ -226,294 +249,358 @@ export default function ForumSubPage() {
       .then((res) => res.json())
       .then((data) => {
         setUser({ ...user, achievements: data.achievements });
+      })
+      .finally(() => {
+        toast?.current?.show({
+          severity: "success",
+          summary: "Thay đổi thông tin",
+          detail: "thay đổi thông tin thành công",
+          life: 3000,
+        });
+      });
+  };
+
+  const handleRemoveThreat = (id) => {
+    const api = apiURL + "threats/" + id;
+
+    fetch(api, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    }).finally(() => {
+      toast?.current?.show({
+        severity: "success",
+        summary: "Xoá câu hỏi",
+        detail: "Xoá câu hỏi thành công",
+        life: 3000,
+      });
+      getThreats();
+    });
+  };
+
+  const handleUploadAvatar = (e) => {
+    const file = e.target.files[0];
+
+    const formData = new FormData();
+    formData.append("avatar", file);
+    avatarRef.current.src = URL.createObjectURL(file);
+
+    const api = apiURL + "user/avatar/" + user.id;
+    fetch(api, {
+      method: "POST",
+      body: formData,
+    })
+      .then((data) => {
+        if (data.status === 200) {
+          user.avatar = data.avatar;
+          toast?.current?.show({
+            severity: "success",
+            summary: "Thay ảnh đại diện",
+            detail: "Thay ảnh đại diện thành công",
+            life: 3000,
+          });
+        } else {
+          toast?.current?.show({
+            severity: "error",
+            summary: "Thay ảnh đại diện",
+            detail: "Thay ảnh đại diện không thành công",
+            life: 3000,
+          });
+        }
+      })
+      .catch((err) => {
+        console.log("chang avatar", err);
+        toast?.current?.show({
+          severity: "error",
+          summary: "Thay ảnh đại diện",
+          detail: "Thay ảnh đại diện không thành công",
+          life: 3000,
+        });
       });
   };
 
   return (
     <div id="sub-forum-page">
-      <Toast ref={toast} />
+      <Toast position="center" ref={toast} />
 
-      <div className="forum-container container position-relative">
-        <button
-          onClick={handleShowAddFrame}
-          className="btn btn-danger btn-add-threat bi bi-file-earmark-plus-fill"
-        ></button>
+      <div className="row">
+        {/* user info */}
+        <div className="col-lg-3 order-lg-first text-center order-last">
+          {(isLogin && (
+            <Card>
+              <Chip
+                className="m-1"
+                label={<b>Thông tin đăng nhập / Thông tin tài khoản</b>}
+              />
+              <br />
+              <small style={{ fontSize: "0.8em" }}>
+                <i>
+                  Bạn đang là thành viên tại <b>TFT</b>
+                </i>
+              </small>
 
-        {!isLogin ? (
-          <button
-            onClick={() => setShow(true)}
-            className="btn btn-danger btn-add-threat bi bi-box-arrow-in-right mt-5"
-          ></button>
-        ) : (
-          <Avatar
-            onClick={() => setShowEdit(true)}
-            className="btn-add-threat mt-5"
-            src=""
-            alt="Hihi"
-          />
-        )}
-
-        <div className="row">
-          <div className="col-md-6">
-            <div className="threats">
-              {threats &&
-                threats.map((threat) => (
-                  <Threat
-                    key={threat.id}
-                    threat={threat}
-                    setActive={setActiveThreat}
-                    isActive={activeThreat && threat.id === activeThreat.id}
-                  />
-                ))}
-            </div>
-          </div>
-
-          <div className="col-md-6">
-            {activeThreat && (
-              <div className="threat-discussion">
-                <div className="threat-header bg-white p-3">
-                  <b>THẢO LUẬN</b>
-                </div>
-                <div className="threat-body p-3">
-                  {activeThreat.comments &&
-                    activeThreat.comments.map((comment) => (
-                      <Comment comment={comment} beLongsToMe={false} />
-                    ))}
-                </div>
-                <div className="threat-footer bg-white p-3">
-                  <div className="row">
-                    <div className="col-10">
-                      <input
-                        ref={commentRef}
-                        type="text"
-                        className="form-control"
-                      />
-                    </div>
-                    <div className="col-2">
-                      <button
-                        onClick={isLogin ? handelComment : () => setShow(true)}
-                        className="btn btn-danger bi bi-arrow-up-right-circle-fill"
-                      ></button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className="add-frame">
-        <button
-          ref={btnAdd}
-          onClick={handleShowAddFrame}
-          className="btn-add btn btn-dark bi bi-arrow-up-right-circle-fill"
-        ></button>
-
-        <div className="frame-container">
-          <h6>{"Thêm câu hỏi cho cộng đồng"}</h6>
-          <textarea
-            onChange={(e) => setThreat({ ...threat, content: e.target.value })}
-            className="form-control my-3"
-            rows={4}
-          ></textarea>
-
-          <div className="text-center">
-            <button onClick={handlePostAThreat} className="btn btn-dark mt-3">
-              Đăng câu hỏi
-            </button>
-          </div>
-        </div>
-
-        <Modal size="lg" show={show && !isLogin} onHide={handleClose}>
-          <ModalBody>
-            <CloseButton onClick={handleClose} />
-
-            <h5>Bạn không phải là thành viên của TFT</h5>
-            <p>
-              <i>
-                Chỉ thành viên tại TFT với có quyền hồi đáp.
-                <br />
-                <b>Đăng nhập ngay</b> nếu bạn là sinh viên TFT
-              </i>
-            </p>
-
-            <div className="row">
-              <div className="col-md-2">MSSV</div>
-              <div className="col-md-10">
-                <input
-                  ref={mssvRef}
-                  className="form-control"
-                  type="text"
-                  placeholder="Điền mã số sinh viên"
+              {(user && user.avatar && user.avatar && (
+                <img
+                  ref={avatarRef}
+                  src={imageURL + user.avatar}
+                  alt="Ảnh đại diện"
+                  style={{
+                    width: "150px",
+                    height: "150px",
+                    borderRadius: "50%",
+                  }}
+                  className="d-block my-2 mx-auto"
                 />
-              </div>
-
-              <div className="col-md-2 mt-1">Mật khẩu</div>
-              <div className="col-md-10 mt-1">
-                <input
-                  ref={passRef}
-                  className="form-control"
-                  type="password"
-                  placeholder="Điền mật khẩu"
+              )) || (
+                <PersonCircle
+                  style={{ width: "150px", height: "150px" }}
+                  className="d-block my-2 mx-auto"
                 />
-              </div>
-
-              {isFirst && (
-                <>
-                  <div className="col-md-2 mt-1">Mật khẩu mới</div>
-                  <div className="col-md-10 mt-1">
-                    <input
-                      ref={newPassRef}
-                      className="form-control"
-                      type="password"
-                      placeholder="Điền mật khẩu mới"
-                    />
-                  </div>
-                </>
               )}
 
-              <button
-                onClick={handleLogin}
-                className="btn btn-danger col-md-6 offset-md-3 my-2"
-              >
-                Đăng nhập
-              </button>
-
-              <div className="col-md-3"></div>
+              <div className="text-center mt-2">
+                <label htmlFor="upload">
+                  <span className="btn pb-2" aria-hidden={true}>
+                    <PersonBoundingBox />
+                  </span>
+                  <input
+                    type="file"
+                    onChange={handleUploadAvatar}
+                    accept="image/png, image/gif, image/jpeg"
+                    id="upload"
+                    style={{ display: "none" }}
+                  />
+                </label>
+              </div>
 
               <Chip
-                onClick={handleForgetPassWord}
-                label="Quên mật khẩu"
-                className="col-md-3"
-                style={{ cursor: "pointer" }}
+                className="m-2 w-100"
+                label={
+                  <div>
+                    <span>Sinh viên </span>
+                    <b>{(user && user.name) || "không xác định"}</b>
+                  </div>
+                }
               />
 
               <Chip
-                onClick={() => setIsFirst(true)}
-                label="Thay đổi mật khẩu"
-                className="col-md-3 ms-1"
-                style={{ cursor: "pointer" }}
+                className="m-2 w-100"
+                label={
+                  <div>
+                    <span>MSSV </span>
+                    <b>{(user && user.mssv) || "không xác định"}</b>
+                  </div>
+                }
               />
-            </div>
-          </ModalBody>
-        </Modal>
 
-        <Modal size="lg" show={showEdit} onHide={() => setShowEdit(false)}>
-          <ModalBody>
-            <CloseButton onClick={() => setShowEdit(false)} />
+              <Chip
+                className="m-2 w-100 py-2"
+                label={
+                  <div>
+                    <span>Khoá </span>
+                    <b>
+                      {(user &&
+                        user.class &&
+                        (+user.class.substring(2, 4) - 18 >= 1
+                          ? +user.class.substring(2, 4) - 18
+                          : 0)) ||
+                        "không xác định"}
+                    </b>
+                    {" / "}
+                    <span>Lớp </span>
+                    <b>{(user && user.class) || "không xác định"}</b>
+                  </div>
+                }
+              />
 
-            <h5>Thông tin tài khoản</h5>
-            <p>
-              <i>
-                Bạn đang là thành viên tại <b>TFT</b>
-              </i>
-            </p>
+              <small>Tiểu sử/Thành tích</small>
+              <div className="row">
+                <div className="col-8">
+                  <textarea
+                    onChange={(e) =>
+                      setUser({ ...user, achievements: e.target.value })
+                    }
+                    className="form-control mt-2"
+                    type="text"
+                    rows={5}
+                    defaultValue={user && user.achievements}
+                  />
+                </div>
 
-            <div className="row">
-              <div className="offset-md-3 col-md-6">
-                <Avatar
-                  src={user && user.avatar && imageURL + user.avatar}
-                  alt={user && user.name}
-                  style={{ width: "200px", height: "200px" }}
-                  className="mx-auto"
-                />
-                <div className="text-center mt-2">
-                  <button className="btn btn-danger">Thay ảnh đại diện</button>
+                <div className="col-2">
+                  <button
+                    className="mt-1 mb-2 btn"
+                    danger
+                    onClick={handleArchiement}
+                  >
+                    Lưu
+                  </button>
                 </div>
               </div>
-              <div className="col-md-3"></div>
 
-              <div className="col-md-6 mt-2">
-                <input
-                  className="form-control"
-                  type="text"
-                  value={
-                    user &&
-                    user.class &&
-                    "Sinh viên khoá " +
-                      (+user.class.substring(2, 4) - 18 >= 1
-                        ? +user.class.substring(2, 4) - 18
-                        : 0)
-                  }
-                  readOnly={true}
-                />
-              </div>
+              <br />
+              <small>Mật khẩu mới</small>
+              <div className="row">
+                <div className="col-9 col-lg-6 col-xl-8">
+                  <input
+                    ref={newPassRef}
+                    className="form-control"
+                    type="password"
+                    placeholder="..."
+                  />
+                </div>
 
-              <div className="col-md-6 mt-2">
-                <input
-                  className="form-control"
-                  type="text"
-                  value={user && user.class && "Sinh viên lớp " + user.class}
-                  readOnly={true}
-                />
+                <div className="col-2">
+                  <button
+                    className="mt-1 mb-2 btn"
+                    danger
+                    onClick={handleResetPass}
+                  >
+                    Lưu
+                  </button>
+                </div>
               </div>
 
-              <div className="col-md-2 mt-3">Tên sinh viên</div>
-              <div className="col-md-10 mt-3">
-                <input
-                  className="form-control"
-                  value={user && user.name}
-                  type="text"
-                  readOnly={true}
-                />
-              </div>
-
-              <div className="col-md-2 mt-2">MSSV</div>
-              <div className="col-md-10">
-                <input
-                  className="form-control mt-2"
-                  type="text"
-                  value={user && user.mssv}
-                  readOnly={true}
-                />
-              </div>
-
-              <div className="col-md-2 mt-2">Tiểu sử/Thành tích</div>
-              <div className="col-md-8">
-                <textarea
-                  onChange={(e) =>
-                    setUser({ ...user, achievements: e.target.value })
-                  }
-                  className="form-control mt-2"
-                  type="text"
-                  rows={3}
-                >
-                  {user && user.achievements}
-                </textarea>
-              </div>
-              <div className="col-md-2 mt-2">
-                <button onClick={handleArchiement} className="btn btn-danger">
-                  Lưu
-                </button>
-              </div>
-
-              <div className="col-md-2 mt-2">Mật khẩu mới</div>
-              <div className="col-md-8 mt-2">
-                <input
-                  ref={newPassRef}
-                  className="form-control"
-                  type="password"
-                  placeholder="Điền mật khẩu mới"
-                />
-              </div>
-              <div className="col-md-2 mt-2">
-                <button onClick={handleResetPass} className="btn btn-danger">
-                  Xác nhận
-                </button>
-              </div>
-
-              <button
-                onClick={handleLogout}
-                className="btn btn-danger col-md-6 offset-md-3 my-4"
-              >
+              <button danger onClick={handleLogout} className="my-2 btn">
                 Đăng xuất
               </button>
+            </Card>
+          )) || (
+            <Card>
+              <Chip
+                className="m-1"
+                label={<b>Thông tin đăng nhập / Thông tin tài khoản</b>}
+              />
+              <br />
+              <small>
+                Bạn không phải là thành viên của TFT
+                <p>
+                  <i>
+                    Chỉ thành viên tại TFT với có quyền hồi đáp.
+                    <br />
+                    <b>Đăng nhập ngay</b> nếu bạn là sinh viên TFT
+                  </i>
+                </p>
+              </small>
 
-              <div className="col-md-3"></div>
+              <div className="row">
+                <div className="col-lg-2">MSSV</div>
+                <div className="col-lg-10">
+                  <input
+                    ref={mssvRef}
+                    className="form-control"
+                    type="text"
+                    placeholder="Điền mã số sinh viên"
+                  />
+                </div>
+
+                <div className="col-lg-2 mt-1">Mật khẩu</div>
+                <div className="col-lg-10 mt-1">
+                  <input
+                    ref={passRef}
+                    className="form-control"
+                    type="password"
+                    placeholder="Điền mật khẩu"
+                  />
+                </div>
+              </div>
+
+              <button danger onClick={handleLogin} className="my-2 btn">
+                Đăng nhập
+              </button>
+              <br />
+            </Card>
+          )}
+        </div>
+
+        {/* threats */}
+        <div className="col-lg-6">
+          <Chip className="m-1" label={<b>Thảo luận về TFT</b>} />
+          <br />
+          <small className="px-2" style={{ fontSize: "0.8em" }}>
+            <i>
+              Đừng ngần ngại đặt câu hỏi để được chính các sinh viên TFT giải
+              đáp một cách nhanh nhất có thể nhé
+            </i>
+          </small>
+
+          <div ref={myThreatCard} className="threats p-3">
+            {threats &&
+              threats.map((threat) => (
+                <Threat
+                  key={threat.id}
+                  threat={threat}
+                  handleRemove={handleRemoveThreat}
+                  setActive={setActiveThreat}
+                  isActive={activeThreat && threat.id === activeThreat.id}
+                />
+              ))}
+          </div>
+        </div>
+
+        {/* add */}
+        <div className="col-lg-3">
+          <Card>
+            <Chip className="m-1" label={<b>Đặt câu hỏi tại đây</b>} />
+            <div className="frame-container">
+              <textarea
+                style={{ fontSize: "0.8em" }}
+                onChange={(e) =>
+                  setThreat({ ...threat, content: e.target.value })
+                }
+                className="form-control my-3"
+                rows={8}
+                value={threat && threat.content}
+              ></textarea>
+
+              <small style={{ fontSize: "0.8em" }}>
+                Những câu hỏi tham khảo
+              </small>
+              <select
+                onChange={(e) =>
+                  setThreat({ ...threat, content: e.target.value })
+                }
+                style={{ fontSize: "0.8em" }}
+                className="form-control"
+              >
+                <option>
+                  Chương trình CNTT liên kết với doanh nghiệp và trường cao đẳng
+                  Nhật Bản có thời gian đào tạo trong bao lâu?
+                </option>
+                <option>
+                  Chương trình CNTT liên kết với doanh nghiệp và trường cao đẳng
+                  Nhật Bản khi nào bắt đầu tuyển sinh?
+                </option>
+
+                <option>
+                  Chương trình CNTT liên kết với doanh nghiệp và trường cao đẳng
+                  Nhật Bản bao gồm những khái niệm và kỹ năng quan trọng nào?
+                </option>
+
+                <option>
+                  Các tiêu chuẩn ưu tiên cho từng khóa học là gì? Làm thế nào để
+                  chúng được nhấn mạnh trong suốt năm học?
+                </option>
+
+                <option>
+                  Chương trình CNTT liên kết với doanh nghiệp và trường cao đẳng
+                  Nhật Bản có nội dung học tập như thế nào. Nội dung chương
+                  trình có được cập nhật không?
+                </option>
+
+                <option>
+                  Chương trình CNTT liên kết với doanh nghiệp và trường cao đẳng
+                  Nhật Bản có yêu cầu đầu ra cho sinh viên như thế nào?
+                </option>
+              </select>
+
+              <div className="text-center">
+                <button danger onClick={handlePostAThreat} className="mt-3 btn">
+                  Đăng câu hỏi
+                </button>
+              </div>
             </div>
-          </ModalBody>
-        </Modal>
+          </Card>
+        </div>
       </div>
     </div>
   );

@@ -1,15 +1,15 @@
-import { Button } from "react-bootstrap";
-import ContactForm from "../../components/ContactForm";
-import Footer from "../../components/Footer";
-import HomeSubPage from "../../subpages/Home";
-import ForumSubPage from "./Forum";
-import HonorSubPage from "./Honor";
-import IntroSubPage from "./Intro";
-import PostSubPage from "./Post";
 import "./styles.css";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Footer from "../../components/Footer";
+import HomeSubPage from "../../subpages/Home";
+import HonorSubPage from "./Honor";
+import IntroSubPage from "./Intro";
 
 export default function Index() {
+  //refs
+  const navigate = useNavigate();
+
   //handles
   //get all nav buttons
   //get all sections
@@ -42,6 +42,10 @@ export default function Index() {
     document.querySelector(".stack-index .stack-nav .logo").click();
   }, []);
 
+  useEffect(() => {
+    document.title = "Chương trình CNTT TFT";
+  },[]);
+
   const handleUnShowAllSections = () => {
     const activeNav = document.querySelector(
       ".stack-index .stack-nav button.nav-button.active"
@@ -66,65 +70,58 @@ export default function Index() {
 
   return (
     <div className="stack-index">
-      <div className="stack-nav fixed-top">
-        <div className="container">
-          <div className="row">
-            <div className="col-12 text-center col-lg-2 p-3">
-              <img
-                onClick={handleHome}
-                className="logo img-fluid"
-                src="./src/intros/logo.png"
-                alt="FIT TDC"
-                title="Khoa công nghệ thông tin- Trường cao đẳng Công nghệ Thủ Đức"
-              />
-            </div>
-
-            <div className="col-12 text-center py-2 mx-3 my-lg-4 col-lg">
-              <button
-                value={0}
-                className="btn px-3 py-2 nav-button"
-                style={{ width: "100%", height: "100%" }}
-              >
-                Giới thiệu
-              </button>
-            </div>
-
-            <div className="col-12 text-center py-2 mx-3 my-lg-4 col-lg">
-              <button
-                className=" btn px-3 py-2 nav-button"
-                style={{ width: "100%", height: "100%" }}
-              >
-                Bài viết
-              </button>
-            </div>
-
-            <div className="col-12 text-center py-2 mx-3 my-lg-4 col-lg">
-              <button
-                className=" btn px-3 py-2 nav-button"
-                style={{ width: "100%", height: "100%" }}
-              >
-                Cộng đồng
-              </button>
-            </div>
-
-            <div className="col-12 text-center py-2 mx-3 my-lg-4 col-lg">
-              <button
-                className=" btn px-3 py-2 nav-button"
-                style={{ width: "100%", height: "100%" }}
-              >
-                Vinh danh
-              </button>
-            </div>
-
-            <div className="col-12 text-center py-2 mx-3 my-lg-4 col-lg">
-              <button
-                className=" btn px-3 py-2 nav-button"
-                style={{ width: "100%", height: "100%" }}
-              >
-                Liên hệ
-              </button>
-            </div>
+      <div className="stack-nav fixed-top ">
+        <div className="row">
+          <div className="col-sm"></div>
+          <div className="col-12 text-center col-lg-2 p-3">
+            <img
+              onClick={handleHome}
+              className="logo img-fluid"
+              src="./src/intros/logo.png"
+              alt="FIT TDC"
+              title="Khoa công nghệ thông tin- Trường cao đẳng Công nghệ Thủ Đức"
+            />
           </div>
+
+          <div className="col-5 col-sm text-center py-2 mx-3 my-lg-4">
+            <button
+              value={0}
+              className="btn px-3 py-2 nav-button"
+              style={{ width: "100%", height: "100%" }}
+            >
+              Giới thiệu
+            </button>
+          </div>
+
+          <div className="col-5 col-sm text-center py-2 mx-3 my-lg-4">
+            <button
+              onClick={() => navigate("/bai-viet")}
+              className=" btn px-3 py-2 nav-button"
+              style={{ width: "100%", height: "100%" }}
+            >
+              Bài viết
+            </button>
+          </div>
+
+          <div className="col-5 col-sm text-center py-2 mx-3 my-lg-4">
+            <button
+              onClick={() => navigate("/cong-dong")}
+              className=" btn px-3 py-2 nav-button"
+              style={{ width: "100%", height: "100%" }}
+            >
+              Cộng đồng
+            </button>
+          </div>
+
+          <div className="col-5 col-sm text-center py-2 mx-3 my-lg-4">
+            <button
+              className=" btn px-3 py-2 nav-button"
+              style={{ width: "100%", height: "100%" }}
+            >
+              Vinh danh
+            </button>
+          </div>
+          <div className="col-lg"></div>
         </div>
       </div>
 
@@ -138,8 +135,8 @@ export default function Index() {
             e.target.volume = 0.5;
           }}
         >
-          <source src={`./src/intros/intro-2.mp4`} type="video/mp4" />
-          <audio src={`./src/intros/intro-2.mp4`} autoPlay={true} />
+          <source src={`./src/intros/intro.mp4`} type="video/mp4" />
+          <audio src={`./src/intros/intro.mp4`} autoPlay={true} />
         </video>
       </div>
 
@@ -154,24 +151,12 @@ export default function Index() {
         <IntroSubPage />
       </section>
 
-      <section className="stack-section posts-section">
-        <PostSubPage />
-      </section>
+      <section className="stack-section"></section>
 
-      <section className="stack-section forum-section">
-        <ForumSubPage />
-      </section>
+      <section className="stack-section"></section>
 
       <section className="stack-section honor-section">
         <HonorSubPage />
-      </section>
-
-      <section className="stack-section contact-section">
-        <div className="mb-3 row">
-          <div className="offset-2 col-8">
-            <ContactForm />
-          </div>
-        </div>
       </section>
     </div>
   );

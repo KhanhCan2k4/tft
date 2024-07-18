@@ -5,6 +5,7 @@ import { Nav, NavItem } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./styles.css";
 import { TFT_REMEMBER_TOKEN, checkLogin } from "../../pages/Admin/Login";
+import { Button, Card, Popconfirm } from "antd";
 
 export default function AdminLayout({ slot, activeIndex = 0 }) {
   //refs
@@ -38,12 +39,20 @@ export default function AdminLayout({ slot, activeIndex = 0 }) {
         text: "POSTS",
       },
       {
-        link: "/admin/forums",
-        text: "FORUMS",
+        link: "/admin/forum",
+        text: "FORUM",
       },
       {
         link: "/admin/contacts",
         text: "CONTACTS",
+      },
+      {
+        link: "/admin/curriculums",
+        text: "CURRICULUMS",
+      },
+      {
+        link: "/admin/configs",
+        text: "CONFIGURATIONS",
       },
     ]);
   }, []);
@@ -69,13 +78,13 @@ export default function AdminLayout({ slot, activeIndex = 0 }) {
       <Toast ref={toast} />
 
       <div className="row">
-        <div className="admin-nav col-md-3 bg-dark text-white p-3">
-          <Nav
-            variant="tabs"
-            defaultActiveKey="/admin/intro"
-            className="flex-column"
-          >
-            <NavItem>
+        <div className="admin-nav col-lg-3 bg-white s">
+          <Card className="text-dark bg-white">
+            <Nav
+              variant="tabs"
+              defaultActiveKey="/admin/intro"
+              className="flex-column"
+            >
               <div className="text-center">
                 <img
                   className="logo img-fluid"
@@ -84,39 +93,41 @@ export default function AdminLayout({ slot, activeIndex = 0 }) {
                   title="Khoa công nghệ thông tin- Trường cao đẳng Công nghệ Thủ Đức"
                 />
               </div>
-            </NavItem>
 
-            {navbarItems &&
-              navbarItems.map((item, index) => (
-                <NavItem
-                  key={item.link}
-                  onClick={handleNav}
-                  data-link={item.link}
-                  className={
-                    "text-decoration-none text-white btn btn-outline-secondary m-2 p-3" +
-                    (activeIndex === index ? " active" : "")
-                  }
-                >
-                  {item.text}
-                </NavItem>
-              ))}
+              {navbarItems &&
+                navbarItems.map((item, index) => (
+                  <NavItem
+                    key={item.link}
+                    onClick={handleNav}
+                    data-link={item.link}
+                    className={
+                      "admin-nav-button text-decoration-none m-2 p-3 fw-bold" +
+                      (activeIndex === index
+                        ? " active s text-danger bg-white"
+                        : "")
+                    }
+                    style={{ cursor: "pointer" }}
+                  >
+                    {item.text}
+                  </NavItem>
+                ))}
 
-            <hr />
-            <NavItem
-              onClick={handleLogout}
-              className="btn btn-outline-secondary m-2 p-3"
-            >
-              <Link
-                to="/admin/intro"
-                className="text-decoration-none text-white fw-bold"
+              <hr />
+              <Popconfirm
+                title="Are you sure you want to logout?"
+                okText="Confirm to logout?"
+                cancelText="Cancel"
+                onConfirm={handleLogout}
               >
-                LOGOUT
-              </Link>
-            </NavItem>
-          </Nav>
+                <button className=" m-2 p-3 mx-5 btn">LOGOUT</button>
+              </Popconfirm>
+            </Nav>
+          </Card>
         </div>
 
-        <div className="admin-content col-md-9 py-3 px-5">{slot}</div>
+        <div className="admin-content col-lg-9 py-3 px-5 bg-white s">
+          {slot}
+        </div>
       </div>
     </div>
   );

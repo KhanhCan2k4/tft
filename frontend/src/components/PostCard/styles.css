@@ -1,5 +1,6 @@
 .post-card {
     transition: 2s;
+    background-color: white;
 }
 
 .post-card .card {
@@ -20,8 +21,8 @@
 }
 
 .post-card .card .card-title {
-   height: 30px;
-   overflow: hidden;
+    height: 30px;
+    overflow: hidden;
 }
 
 .post-card .card .btn-view {

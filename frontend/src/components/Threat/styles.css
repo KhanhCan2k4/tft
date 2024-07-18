@@ -1,0 +1,10 @@
+.my-threat .comments {
+    max-height: 300px;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.my-threat .comments::-webkit-scrollbar {
+    display: none;
+}

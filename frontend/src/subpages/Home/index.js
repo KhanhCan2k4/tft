@@ -4,7 +4,7 @@ export default function HomeSubPage() {
   return (
     <div className="home-sub-page">
       <div className="row">
-        <div className="title-frame col-md-6">
+        <div className="title-frame mt-md-1 mt-5 col-md-6">
           <h4 className="title">
             <span>Chương trình</span>
             <br />
@@ -37,7 +37,7 @@ export default function HomeSubPage() {
           <div className="row">
             <div className="offset-md-3 col-md-6">
               <div className="logo logo-ja">
-                <img src="./src/intros/introo.jpg" alt="" />
+                <img src="./src/intros/introo.jpg" alt="Quan hệ TDC - Freesia - TMCIT" />
               </div>
             </div>
           </div>

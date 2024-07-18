@@ -1,17 +1,21 @@
-import { Badge, Modal } from "react-bootstrap";
+import { Badge, CloseButton, Modal } from "react-bootstrap";
 import AdminLayout from "./../../../../layouts/AdminLayout/index";
 import Banner from "../../../../components/Banner";
-import { useEffect, useRef, useState } from "react";
-import { apiURL } from "../../../../App";
+import { useContext, useEffect, useRef, useState } from "react";
+import { apiURL, ConfigContext } from "../../../../App";
 import { imageURL } from "./../../../../App";
 import { Editor } from "@tinymce/tinymce-react";
 import { Toast } from "primereact/toast";
+import { Chip } from "@mui/material";
+import { Button } from "antd";
+import { FileArrowUpFill } from "react-bootstrap-icons";
 
 export default function AdminIntroIndex() {
   //refs
   const reviewedImage = useRef();
   const contentEditor = useRef();
   const toast = useRef();
+  const configs = useContext(ConfigContext);
 
   //states
   const [banners, setBanners] = useState([]);
@@ -25,13 +29,18 @@ export default function AdminIntroIndex() {
   const [showedBanner, setShowedBanner] = useState(banners[0]);
 
   const handleClose = (e) => {
-    if (e && e.target) {
-      e.target.textContent = "Đang tải...";
+    if (!newBannerInput) {
+      toast?.current?.show({
+        severity: "error",
+        summary: "Upload banner",
+        detail: "New banner is not available",
+        life: 3000,
+      });
+      return;
     }
 
-    if (!newBannerInput) {
-      setShow(false);
-      return;
+    if (e && e.target) {
+      e.target.textContent = "Loading...";
     }
 
     const formData = new FormData();
@@ -56,12 +65,19 @@ export default function AdminIntroIndex() {
 
     setShow(false);
   };
+
   const handleShow = (banner) => {
     setShowedBanner(banner);
     return setShow(true);
   };
 
   //effects
+
+  //set title
+  useEffect(() => {
+    document.title = "Administration Introduction";
+  }, []);
+
   //get post
   useEffect(() => {
     const api = apiURL + "posts/1";
@@ -93,16 +109,25 @@ export default function AdminIntroIndex() {
 
   useEffect(() => {
     const inputFiles = [];
-    for (let i = banners.length + 1; i <= 6; i++) {
+    for (let i = banners.length + 1; i <= 10; i++) {
       inputFiles.push(
-        <div key={i} className="mb-3">
-          <h4>#{i}</h4>
-          <input
-            accept="image/*"
-            onChange={handleInputImage}
-            className="form-control"
-            type="file"
-          />
+        <div key={i} className="mb-3 d-inline-block mx-2">
+          <div className="mt-2">
+            <label htmlFor="upload">
+              <span className="btn" aria-hidden={true}>
+                <b># {i}</b>
+
+                <FileArrowUpFill />
+              </span>
+              <input
+                type="file"
+                onChange={handleInputImage}
+                accept="image/png, image/gif, image/jpeg"
+                id="upload"
+                style={{ display: "none" }}
+              />
+            </label>
+          </div>
         </div>
       );
     }
@@ -303,10 +328,7 @@ export default function AdminIntroIndex() {
                 <Badge bg="danger">INTRO POST</Badge>
               </div>
               <div className="col text-end">
-                <button
-                  onClick={handleUpdatePost}
-                  className="btn btn-outline-danger"
-                >
+                <button onClick={handleUpdatePost} className="btn text-danger">
                   Save changes
                 </button>
               </div>
@@ -315,13 +337,17 @@ export default function AdminIntroIndex() {
             <div className="intro-post-container">
               <input
                 className="form-control my-2 fw-bold"
-                readOnly
+                disabled
                 value={"Bài viết giới thiệu"}
               />
 
               <Editor
                 ref={contentEditor}
-                apiKey="8gjew3xfjqt5cu2flsa3nz2oqr4z5bru9hr3phl05rsfyss3"
+                apiKey={
+                  configs?.find((config) => config.key === "EDITOR_API_KEY")
+                    ?.value ||
+                  "8gjew3xfjqt5cu2flsa3nz2oqr4z5bru9hr3phl05rsfyss3"
+                }
                 init={{
                   plugins:
                     "anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount linkchecker",
@@ -336,61 +362,74 @@ export default function AdminIntroIndex() {
 
           <div className="banners mt-3">
             <Badge bg="danger">BANNERS</Badge>
-            <div className="banner-container">
+            <div className="banner-container row">
               {banners &&
                 banners.map((banner) => (
-                  <Banner
-                    key={banner.id}
-                    banner={banner}
-                    handleShow={handleShow}
-                    handleDelete={handleDelete}
-                    handelPriority={handelPriority}
-                  />
+                  <div key={banner.id} className="col-md-6">
+                    <Banner
+                      banner={banner}
+                      handleShow={handleShow}
+                      handleDelete={handleDelete}
+                      handelPriority={handelPriority}
+                    />
+                  </div>
                 ))}
             </div>
 
             {inputFiles.length > 0 && <div>{inputFiles}</div>}
           </div>
 
-          <Modal show={show} onHide={handleClose} size="xl">
-            <Modal.Header closeButton>
-              <Modal.Title>CHANGE BANNER</Modal.Title>
+          <Modal show={show} onHide={() => setShow(false)} size="xl">
+            <Modal.Header>
+              CHANGE BANNER
+              <CloseButton onClick={() => setShow(false)} />
             </Modal.Header>
-            <Modal.Body className="text-center">
-              <div className="text-start my-3">
-                <Badge bg="danger">Old Image</Badge>
-              </div>
-              <img
-                style={{ width: "50%" }}
-                src={
-                  showedBanner &&
-                  showedBanner.img &&
-                  imageURL + showedBanner.img
-                }
-                alt=""
-              />
+            <Modal.Body>
+              <div className="row">
+                <div className="col-md-6">
+                  <Chip className="m-1" label={<b>Old Image</b>} />
+                  <br />
 
-              <br />
-              <br />
+                  <img
+                    style={{ width: "90%" }}
+                    src={
+                      showedBanner &&
+                      showedBanner.img &&
+                      imageURL + showedBanner.img
+                    }
+                    alt="Old Banner"
+                  />
+                </div>
 
-              <div className="text-start my-3">
-                <Badge bg="danger">New Image</Badge>
-              </div>
-              <input
-                accept="image/*"
-                onChange={(e) => handleChangeImage(e)}
-                className="form-control"
-                type="file"
-              />
-              <br />
+                <div className="col-md-6">
+                  <Chip className="m-1" label={<b>New Image</b>} />
+                  <br />
 
-              <div className="text-start my-3">
-                <Badge bg="danger">Preview</Badge>
+                  <img
+                    ref={reviewedImage}
+                    style={{ width: "90%" }}
+                    alt="New Banner"
+                  />
+
+                  <div className="mt-2">
+                    <label htmlFor="upload-change">
+                      <span className="btn" aria-hidden={true}>
+                        <FileArrowUpFill />
+                      </span>
+                      <input
+                        type="file"
+                        onChange={(e) => handleChangeImage(e)}
+                        accept="image/png, image/gif, image/jpeg"
+                        id="upload-change"
+                        style={{ display: "none" }}
+                      />
+                    </label>
+                  </div>
+                </div>
               </div>
-              <img ref={reviewedImage} style={{ width: "50%" }} alt="" />
             </Modal.Body>
             <Modal.Footer>
-              <button className="btn btn-danger" onClick={handleClose}>
+              <button className="text-danger btn" onClick={handleClose}>
                 Save changes
               </button>
             </Modal.Footer>

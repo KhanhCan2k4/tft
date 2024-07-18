@@ -14,10 +14,8 @@ return new class extends Migration
         Schema::create('tags', function (Blueprint $table) {
             $table->id();
             $table->string("name", 255);
-            $table->unsignedBigInteger("author");
             $table->timestamp("created_at")->useCurrent();
             $table->timestamp("updated_at")->useCurrentOnUpdate()->nullable();
-            $table->foreign("author")->references("id")->on("users");
         });
     }
 

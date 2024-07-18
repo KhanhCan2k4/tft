@@ -14,9 +14,12 @@ return new class extends Migration
         Schema::create('contacts', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('email');
             $table->string('phone')->nullable();
             $table->string('content');
+            $table->float('math')->default(0.0);
+            $table->float('eng')->default(0.0);
+            $table->unsignedBigInteger("status")->default(5);
             $table->timestamp("created_at")->useCurrent();
             $table->timestamp("updated_at")->useCurrentOnUpdate()->nullable();
         });

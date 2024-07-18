@@ -2,18 +2,22 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 100px;
-    height: 100px;
-    background-color: antiquewhite;
+    width: 80px;
+    height: 80px;
+    background-color: var(--system-red);
+    opacity: 0.6;
     clip-path: polygon(0 0, 100% 0, 0 100%);
     z-index: 100;
+    box-shadow: 1px 1px 2px var(--system-white);
 }
 
 .tag-back img {
     margin-top: 5px;
     margin-left: 5px;
-    width: 50%; 
-    height: 50%;
+    width: 45%;
+    height: 45%;
+    background-color: var(--system-white);
+    border-radius: 50%;
 }
 
 .tag-back .back-icon {
@@ -26,9 +30,10 @@
 }
 
 .tag-back:hover {
-    width: 120px;
-    height: 120px;
+    scale: 1.2;
+    opacity: 1;
 }
+
 .tag-back:hover img {
     display: none;
 }

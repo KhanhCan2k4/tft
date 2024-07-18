@@ -21,6 +21,28 @@ class PostController extends Controller
         return Post::where("id", "<>", 1)->orderByDesc("updated_at")->orderByDesc("created_at")->get()->load("tags");
     }
 
+    public function getPostAnalysis()
+    {
+        $dates = [];
+        $views = [];
+        $likes = [];
+        for ($i = 0; $i < 30; $i++) {
+            $d = date("Y-m-d", strtotime("-$i days"));
+            $date = date("d/m", strtotime("-$i days"));
+
+            $dates = [$date, ...$dates];
+            $likes = [Post::where("created_at", "LIKE", "%$d%")->orWhere("updated_at", "LIKE", "%$d%")->sum("likes"), ...$likes];
+            $views = [Post::where("created_at", "LIKE", "%$d%")->orWhere("updated_at", "LIKE", "%$d%")->sum("views"), ...$views];
+        }
+
+        return json_encode([
+            "status" => 200,
+            "dates" => array_values($dates),
+            "likes" => array_values($likes),
+            "views" => array_values($views),
+        ]);
+    }
+
     public function indexWithPaginate($page = 1)
     {
         $posts = Post::where("id", "<>", 1)->orderByDesc("updated_at")->orderByDesc("created_at")->get()->load("tags")->forPage($page, 5);
@@ -59,10 +81,6 @@ class PostController extends Controller
     public function getPostsByTags(Request $request, $page = 1)
     {
         $ids = $request->ids;
-        if (count($ids) == 0) {
-            $ids = Tag::all()->pluck("id");
-        }
-
         $posts = Post::whereHas('tags', function ($query) use ($ids) {
             $query->whereIn('tags.id', $ids);
         })->get();
@@ -138,11 +156,35 @@ class PostController extends Controller
         $post = new Post();
         $post->title = $request->title;
         $post->content = $request->content;
-        $post->author = 1;
-        if ($request->has("author")) {
-            $post->author = $request->author;
+        $post->image = "";
+        $post->save();
+
+        $tags = [];
+        if ($request->has("tags") && isset($request->tags)) {
+            foreach ($request->tags as $id) {
+                $tag = Tag::find($id);
+                array_push($tags, $tag->id);
+            }
         }
 
+        if ($request->has("newTag") && isset($request->newTag)) {
+            $tag = new Tag();
+            $tag->name = $request->newTag;
+            $tag->save();
+            array_push($tags, $tag->id);
+        }
+        $post->tags()->attach($tags);
+
+        return json_encode([
+            'status' => 200,
+            'message' => "Thêm bài viết thành công",
+            "post" => $post,
+        ]);
+    }
+
+    public function storeCover(Request $request, Post $post)
+    {
+        @unlink(public_path() . "/storage/images/" . $post->image);
         if ($request->hasFile("image")) {
             $file = $request->file("image");
             $fileName = str_replace(
@@ -156,35 +198,8 @@ class PostController extends Controller
             $file->move($path, $fileName);
 
             $post->image = 'posts/' . $fileName;
-        } else {
-            $post->image = "";
+            $post->save();
         }
-        $post->save();
-
-
-        $tags = [];
-        if ($request->has("tags") && isset($request->tags)) {
-            foreach ($request->tags as $id) {
-                $tag = Tag::find($id);
-                array_push($tags, $tag);
-            }
-
-            $post->tags()->attach($tags);
-        }
-
-        if ($request->has("newtag") && isset($request->newtag)) {
-            $tag = new Tag();
-            $tag->name = $request->newtag;
-            $tag->author = 1;
-            $tag->save();
-            array_push($tags, $tag);
-            $post->tags()->sync($tags);
-        }
-
-        return json_encode([
-            'status' => 200,
-            'message' => "Thêm bài viết thành công",
-        ]);
     }
 
     /**
@@ -220,46 +235,26 @@ class PostController extends Controller
             ]);
         }
 
+
         $post->title = $request->title;
         $post->content = $request->content;
-
-        if ($request->hasFile("image")) {
-            @unlink($post->image);
-
-            $file = $request->file("image");
-            $fileName = str_replace(
-                ['.', ',', '/', '\\'],
-                '',
-                bcrypt(now() . $file->getClientOriginalName())
-            )
-                . ".jpg";
-
-            $path = public_path() . '/storage/images/posts/';
-            $file->move($path, $fileName);
-
-            $post->image = 'posts/' . $fileName;
-            $post->save();
-        }
-
         $post->save();
 
         $tags = [];
         if ($request->has("tags") && isset($request->tags)) {
-            foreach ($request->tags as $value) {
-                @$tag = Tag::find($value['id']);
-                array_push($tags, $tag);
+            foreach ($request->tags as $id) {
+                $tag = Tag::find($id);
+                array_push($tags, $tag->id);
             }
-            $post->tags()->sync($tags);
         }
 
-        if ($request->has("newtag") && isset($request->newtag)) {
+        if ($request->has("newTag") && isset($request->newTag)) {
             $tag = new Tag();
-            $tag->name = $request->newtag;
-            $tag->author = 1;
+            $tag->name = $request->newTag;
             $tag->save();
-            array_push($tags, $tag);
-            $post->tags()->sync($tags);
+            array_push($tags, $tag->id);
         }
+        $post->tags()->sync($tags);
 
         return json_encode([
             'status' => 200,
@@ -272,6 +267,9 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        //unlink cover
+        @unlink(public_path() . "/storage/images/" . $post->image);
+
         if ($post->delete()) {
             return json_encode([
                 'status' => 200,
@@ -288,6 +286,14 @@ class PostController extends Controller
     public function like(Post $post)
     {
         $post->likes += 1;
+        $post->save();
+
+        return json_encode(["like" => $post->likes]);
+    }
+
+    public function unlike(Post $post)
+    {
+        $post->likes = $post->likes == 0 ? 0 : $post->likes - 1;
         $post->save();
 
         return json_encode(["like" => $post->likes]);

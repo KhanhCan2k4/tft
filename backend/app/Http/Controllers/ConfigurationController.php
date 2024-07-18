@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Configuration;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator as FacadesValidator;
 use Validator;
 
 class ConfigurationController extends Controller
@@ -12,126 +16,82 @@ class ConfigurationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($page)
     {
-        //
-        return Configuration::all();
+        $total = Configuration::all()->count();
+        $configs = Configuration::orderByDesc("updated_at")->orderByDesc("created_at")->forPage($page, 5)->get();
+
+        return json_encode([
+            "total" => $total,
+            "configs" => [...$configs],
+        ]);
+    }
+
+    public function getAllFromUser()
+    {
+        $configs = Configuration::where("key", "<>", "AD_PASS")->get(["key", "value"]);
+
+        return $configs;
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Update the specified resource in storage.
      */
-    public function create()
+    public function update(Request $request, $key)
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-        $validator = Validator::make(
-            $request->all(), [
+        $validator = FacadesValidator::make(
+            $request->all(),
+            [
                 'key' => 'required',
                 'value' => 'required',
             ],
             [
-                'key.required' => 'Bạn chưa điền key',
-                'value.required' => 'Bạn chưa điền value',
+                'key.required' => 'Key is required',
+                'value.required' => 'Value is required',
             ]
         );
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return json_encode([
                 'status' => 422,
                 'message' => $validator->errors()->getMessages(),
             ]);
         }
 
-        $configuration = new Configuration();
+        if ($key === "AD_PASS") {
+            $newPass = Hash::make($request->value);
 
-        $configuration->key = $request->key;
-        $configuration->value = $request->value;
+            $user = User::find(1);
+            $user->password = $newPass;
+            $user->save();
 
-        $configuration->save();
+            //remove all token
+            DB::update("DELETE FROM tokens WHERE user_id = 1");
 
+            if (DB::table("configurations")->where("key", $key)->update(["value" => $newPass])) {
+                return json_encode([
+                    'status' => 200,
+                    'message' => 'Update Successfully',
+                ]);
+            }
+        } else {
+            if ($key === "AD_NAME") {
+                $user = User::find(1);
+                $user->name = $request->value;
+                $user->save();
+            }
 
-        return json_encode([
-            'status' => 200,
-            'message' => 'Success',
-        ]);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Configuration $configuration)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Configuration $configuration)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Configuration $configuration)
-    {
-        //
-        $validator = Validator::make(
-            $request->all(), [
-               'key' => 'required',
-               'value' => 'required',
-           ],
-           [
-               'key.required' => 'Bạn chưa điền key',
-               'value.required' => 'Bạn chưa điền value',
-           ]
-       );
-
-       if($validator->fails()){
-           return json_encode([
-               'status' => 422,
-               'message' => $validator->errors()->getMessages(),
-           ]);
-       }
-
-       $configuration->key = $request->key;
-       $configuration->value = $request->value;
-
-       $configuration->save();
-
-
-       return json_encode([
-           'status' => 200,
-           'message' => 'Success',
-       ]);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Configuration $configuration)
-    {
-        //
-        if($configuration->delete()){
-            return json_encode([
-                'status' => 200,
-                'message' => 'Deleted successfully'
-            ]);
+            if (DB::table("configurations")->where("key", $key)->update(["value" => $request->value])) {
+                return json_encode([
+                    'status' => 200,
+                    'message' => 'Update Successfully',
+                ]);
+            }
         }
 
         return json_encode([
-            'status' => 400,
-            'message' => 'Deleted unsuccessfully'
+            'status' => 422,
+            'message' => "Update Unsuccessfully",
         ]);
     }
 }

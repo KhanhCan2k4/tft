@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('configurations', function (Blueprint $table) {
-            $table->id();
-            $table->string("key", 255);
-            $table->string("value", 255);
+            $table->string("key");
+            $table->longText("value");
             $table->timestamp("created_at")->useCurrent();
             $table->timestamp("updated_at")->useCurrentOnUpdate()->nullable();
+            $table->primary("key");
         });
     }
 

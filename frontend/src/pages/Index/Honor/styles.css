@@ -4,30 +4,28 @@
     padding: 0;
 }
 
-.honor-content .title {
-    position: absolute;
-    top: 0;
-    height: 100px;
-    z-index: 4;
-    display: block;
-    width: 100%;
-    text-align: center;
-    line-height: 100px;
-}
-
 .honor-content .honor-class {
     margin-top: var(--nav-bar-height);
-    padding: 30px 0;
-    height: 60vh;
     border-radius: 20px;
+    height: 66vh;
     position: relative;
     animation: 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.honor-content .slice-honor {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 200px;
+    z-index: 2000000;
 }
 
 @keyframes uppear {
     0% {
         transform: translateX(-120%) translateY(-120%);
     }
+
     100% {
         transform: translateX(0%) translateY(0%);
     }
@@ -37,13 +35,16 @@
     0% {
         opacity: 1;
     }
+
     40% {
         opacity: 0;
         transform: translateX(120%);
     }
+
     60% {
         transform: translateX(-120%);
     }
+
     100% {
         opacity: 1;
         transform: translateX(0);
@@ -54,13 +55,16 @@
     0% {
         opacity: 1;
     }
+
     40% {
         opacity: 0;
         transform: translateX(-120%);
     }
+
     60% {
         transform: translateX(120%);
     }
+
     100% {
         opacity: 1;
         transform: translateX(0);
@@ -69,20 +73,64 @@
 
 .honor-content .honor-class h2 {
     position: absolute;
-    bottom: 100px;
+    bottom: 0;
     padding-bottom: 50px;
     text-align: center;
     width: 100%;
     left: 0;
-    color: white;
-    font-weight: bolder;
+    color: transparent;
+    font-weight: 900;
+    font-family: "Tapestry", serif;
+    font-size: 6em;
+    -webkit-text-stroke: .5px var(--system-white);
+    perspective: 500px;
+    transform-style: preserve-3d;
+}
+
+.honor-content .honor-class h2::before {
+    content: "";
+    position: absolute;
+    left: 5%;
+    right: 5%;
+    top: 10%;
+    bottom: 10%;
+    background-color: var(--system-white);
+    transform: rotateX(45deg) translateZ(-30px);
+    filter: blur(5px);
+    opacity: .5;
+}
+
+.honor-content .honor-class h2::after {
+    content: "";
+    position: absolute;
+    left: 5%;
+    right: 5%;
+    top: 10%;
+    bottom: 10%;
+    background-color: var(--system-black);
+    transform: rotateX(45deg) translateZ(-70px);
+    filter: blur(5px);
+    opacity: .5;
 }
 
 .honor-content .honor-class.next {
     animation-name: next;
     animation-duration: 2s;
+    z-index: 1000;
 }
+
 .honor-content .honor-class.back {
     animation-name: back;
     animation-duration: 2s;
+    z-index: 1000;
+}
+
+.honor-content select {
+    z-index: 1000;
+}
+
+@media only screen and (max-width: 992px) {
+    .honor-content {
+        height: 120vh;
+    }
 }

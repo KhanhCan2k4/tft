@@ -1,7 +1,14 @@
-.detail-post.post-content {
+.detail-post {
     min-height: 100vh;
 }
 
-.detail-post.post-content .post .post-content {
-    min-height: 60vh;
+.detail-post .post {
+    height: 80vh;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.detail-post .post::-webkit-scrollbar {
+    display: none;
 }

@@ -20,6 +20,7 @@
     0% {
         scale: 1.2;
     }
+
     100% {
         scale: 1;
     }
@@ -36,4 +37,36 @@
 
 .post-content .posts .post {
     animation: uppear 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.stack-page .filter-posts .tags-frame .tags,
+.stack-page .recent-posts,
+.stack-page .posts,
+.stack-page .new-posts {
+    height: 50vh;
+    overflow: hidden;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.stack-page .posts {
+    height: 100vh;
+}
+
+.stack-page .filter-posts .tags-frame .tags {
+    height: 80vh;
+}
+
+.stack-page .filter-posts .tags-frame .tags::-webkit-scrollbar,
+.stack-page .recent-posts::-webkit-scrollbar,
+.stack-page .posts::-webkit-scrollbar,
+.stack-page .new-posts::-webkit-scrollbar {
+    display: none;
+}
+
+@media only screen and (max-width: 768px) {
+    .stack-page .filter-posts .tags-frame .tags {
+        height: auto;
+    }
 }

@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
-  Badge,
   CloseButton,
   Modal,
   ModalBody,
@@ -10,7 +9,8 @@ import {
 import { useLocation, useNavigate } from "react-router";
 import emailjs from "emailjs-com";
 import { Toast } from "primereact/toast";
-import { apiURL } from "../../../../App";
+import { apiURL, ConfigContext, getDate } from "../../../../App";
+import { Chip } from "@mui/material";
 
 export default function AdminContactEdit() {
   const toast = useRef();
@@ -20,24 +20,32 @@ export default function AdminContactEdit() {
 
   const location = useLocation();
   const navigate = useNavigate();
+  const configs = useContext(ConfigContext);
 
   useEffect(() => {
     setContact(location.state);
   }, []);
 
+  useEffect(() => {
+    console.log(contact);
+  }, [contact]);
+
   const handleReply = (e) => {
     e.target.textContent = "Loading..";
     emailjs
       .send(
-        "service_miw9zp4",
-        "template_bjyfjbd",
+        configs?.find((config) => config.key === "EMAIL_SERVICE_ID")?.value ||
+          "service_miw9zp4",
+        configs?.find((config) => config.key === "EMAIL_TEMPLATE_01_ID")
+          ?.value || "template_bjyfjbd",
         {
           from_name: "TDC - Cao đẳng Công nghệ Thủ Đức",
           to_name: contact?.name ?? "Unknown",
           message: reply,
           reply_to: contact?.email,
         },
-        "nbxhmGhQt4JpgZSUa"
+        configs?.find((config) => config.key === "EMAIL_USER_ID")?.value ||
+          "nbxhmGhQt4JpgZSUa"
       )
       .then(() => {
         toast.current.show({
@@ -72,16 +80,14 @@ export default function AdminContactEdit() {
     <Modal show={true} size="xl">
       <Toast ref={toast} />
       <ModalHeader>
-        <h4>ADMINISTRATION - REPLY CONTACT</h4>
+        ADMINISTRATION - REPLY CONTACT
         <CloseButton onClick={() => navigate("./..")} />
       </ModalHeader>
 
       <ModalBody>
         <div className="row mb-3">
           <div className="col-md-6">
-            <Badge className="mb-1 me-3" bg="danger" pill>
-              From
-            </Badge>
+            <Chip className="m-1" label={<b>Contact from</b>} />
             <input
               className="form-control"
               readOnly
@@ -89,22 +95,28 @@ export default function AdminContactEdit() {
             />
           </div>
           <div className="col-md-6">
-            <Badge className="mb-1 me-3" bg="danger" pill>
-              Sent at
-            </Badge>
+            <Chip className="m-1" label={<b>Sent at</b>} />
+
             <input
               className="form-control"
               readOnly
-              value={(contact && contact.created_at) || "Unknown"}
+              value={
+                (contact &&
+                  contact.updated_at &&
+                  getDate(contact.updated_at)) ||
+                (contact &&
+                  contact.created_at &&
+                  getDate(contact.created_at)) ||
+                "Unknown"
+              }
             />
           </div>
         </div>
 
         <div className="row mb-3">
           <div className="col-md-6">
-            <Badge className="mb-1 me-3" bg="danger" pill>
-              Email
-            </Badge>
+            <Chip className="m-1" label={<b>From email</b>} />
+
             <input
               className="form-control"
               readOnly
@@ -112,9 +124,8 @@ export default function AdminContactEdit() {
             />
           </div>
           <div className="col-md-6">
-            <Badge className="mb-1 me-3" bg="danger" pill>
-              Phone
-            </Badge>
+            <Chip className="m-1" label={<b>Phone number</b>} />
+
             <input
               className="form-control"
               readOnly
@@ -123,16 +134,41 @@ export default function AdminContactEdit() {
           </div>
         </div>
 
-        <Badge className="mb-1 me-3" bg="danger" pill>
-          Content
-        </Badge>
-        <textarea className="form-control mb-2" rows={5} readOnly>
-          {(contact && contact.content) || "Nothing"}
-        </textarea>
+        <div className="row mb-3">
+          <small>
+            <i>* Information for enrollment</i>
+          </small>
+          <div className="col-md-6">
+            <Chip className="m-1" label={<b>Math</b>} />
 
-        <Badge className="mb-1 me-3" bg="danger" pill>
-          Reply
-        </Badge>
+            <input
+              className="form-control"
+              readOnly
+              value={(contact && contact.math) || "Unknown"}
+            />
+          </div>
+          <div className="col-md-6">
+            <Chip className="m-1" label={<b>English</b>} />
+
+            <input
+              className="form-control"
+              readOnly
+              value={(contact && contact.eng) || "Unknown"}
+            />
+          </div>
+        </div>
+
+        <Chip className="m-1" label={<b>Content</b>} />
+
+        <textarea
+          className="form-control mb-2"
+          rows={5}
+          readOnly
+          defaultValue={contact && contact.content}
+        ></textarea>
+
+        <Chip className="m-1" label={<b>Reply</b>} />
+
         <textarea
           onChange={(e) => setReply(e.target.value)}
           className="form-control"
@@ -142,7 +178,7 @@ export default function AdminContactEdit() {
 
       <ModalFooter>
         {reply && (
-          <button onClick={handleReply} className="btn btn-danger">
+          <button onClick={handleReply} className="btn text-danger">
             Reply
           </button>
         )}

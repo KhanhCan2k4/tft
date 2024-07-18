@@ -1,7 +1,6 @@
 import { Editor } from "@tinymce/tinymce-react";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
-  Badge,
   CloseButton,
   Modal,
   ModalBody,
@@ -9,41 +8,71 @@ import {
   ModalHeader,
 } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router";
-import MultipleSelectTags from "../../../../components/ChooseTag";
-import { apiURL, imageURL } from "../../../../App";
+import {
+  apiURL,
+  ConfigContext,
+  editor_api_key,
+  gemini_api_key,
+  imageURL,
+} from "../../../../App";
 import { Toast } from "primereact/toast";
+import { Chip } from "@mui/material";
+import { Button, Checkbox } from "antd";
 
 export default function AdminPostEdit() {
   //refs
   const navigate = useNavigate();
-  const location = useLocation();
   const contentEditor = useRef();
   const previewedImage = useRef();
   const toast = useRef();
+  const aiRef = useRef();
+  const location = useLocation();
+  const configs = useContext(ConfigContext);
 
   //states
-  const [post, setPost] = useState({
-    title: "",
-    content: "",
-    tags: [],
-    newTag: "",
-  });
+  const [post, setPost] = useState(location.state);
   const [cursorPosition, setCursorPosition] = useState(0);
   const [cover, setCover] = useState();
+  const [templates, setTemplates] = useState([]);
+  const [tags, setTags] = useState([]);
 
   // Call restoreCursorPosition after re-render
   useEffect(() => {
     restoreCursorPosition();
   }, []);
 
+  //fetch all templates
   useEffect(() => {
-    const post = location.state;
-    setPost(post);
+    const api = apiURL + "templates";
+
+    fetch(api)
+      .then((res) => res.json())
+      .then((templates) => {
+        setTemplates(templates);
+      })
+      .catch((err) => {
+        console.log("fetch all templates failed", err);
+      });
+  }, []);
+
+  //fetch all tags
+  useEffect(() => {
+    const api = apiURL + "tags";
+
+    fetch(api)
+      .then((res) => res.json())
+      .then((tags) => {
+        setTags(tags);
+      })
+      .catch((err) => {
+        console.log("fetch all tags failed", err);
+      });
   }, []);
 
   //handlers
   function handleEditorChange(e) {
-    setPost({ ...post, content: e.target.getContent() });
+    setPost({ ...post, content: e?.target?.getContent() });
+    getAiGeneratedText();
 
     // Update cursor position
     const editor = contentEditor.current.editor;
@@ -61,8 +90,8 @@ export default function AdminPostEdit() {
 
   function handleChangeImage(e) {
     const file = e.target?.files[0];
-    previewedImage.current.src = URL.createObjectURL(file);
     setCover(file);
+    previewedImage.current.src = URL.createObjectURL(file);
   }
 
   const handlePost = (e) => {
@@ -72,9 +101,9 @@ export default function AdminPostEdit() {
     if (!post.title) {
       toast.current.show({
         severity: "error",
-        summary: "Create a Post",
+        summary: "Update post",
         detail: "Title is required",
-        life: 3000,
+        life: 300000,
       });
       e.target.style.display = "unset";
       return;
@@ -83,7 +112,7 @@ export default function AdminPostEdit() {
     if (!post.content) {
       toast.current.show({
         severity: "error",
-        summary: "Create a Post",
+        summary: "Update post",
         detail: "Content is required",
         life: 3000,
       });
@@ -91,55 +120,108 @@ export default function AdminPostEdit() {
       return;
     }
 
-    const formData = new FormData();
-    formData.append("title", post.title);
-    formData.append("content", post.content);
-    formData.append("tags", post.tags);
-    formData.append("newtag", post.newTag);
-    formData.append("image", cover);
+    toast?.current?.show({
+      severity: "confirm",
+      summary: "Create a Post",
+      detail: "Please wait for processing",
+      life: 3000,
+    });
 
     const api = apiURL + "posts/" + post.id;
-
     fetch(api, {
-      method: "PATCH",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({...post}),
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...post, tags: post.tags.map((tag) => tag.id) }),
     })
+      .then((res) => res.json())
+      .then(() => {
+        //handle image
+        if (cover) {
+          const formData = new FormData();
+          formData.append("image", cover);
+
+          const api = apiURL + "posts/cover/" + post.id;
+          fetch(api, {
+            method: "POST",
+            body: formData,
+          }).finally(() => {
+            navigate("./..");
+          });
+        } else {
+          navigate("./..");
+        }
+      })
       .catch((err) => {
         console.log("Create post", err);
         toast?.current?.show({
           severity: "error",
-          summary: "Create a Post",
-          detail: "Create a Post failed",
+          summary: "Update post",
+          detail: "Update post failed",
           life: 3000,
         });
         e.target.style.display = "unset";
-      })
-      .finally(() => {
-        navigate("./..");
       });
   };
 
+  const getAiGeneratedText = () => {
+    const api =
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=" +
+      (configs?.find((config) => config.key === "GEMINI_API_KEY")?.value ||
+        gemini_api_key);
+
+    try {
+      aiRef.current.textContent = "Generating content...";
+    } catch (err) {}
+
+    fetch(api, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [
+              {
+                text:
+                  configs?.find(
+                    (config) => config.key === "CREATE_POST_AI_PROMPT"
+                  )?.value ||
+                  "Viết lại đoạn văn dưới đây cho hay hơn: " +
+                    (post && post.content),
+              },
+            ],
+          },
+        ],
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        try {
+          aiRef.current.textContent =
+            data?.candidates[0]?.content?.parts[0]?.text;
+        } catch (err) {}
+      });
+  };
+
+  const handleSelectTags = (e) => {
+    if (e.target.checked) {
+      post.tags.push(e.target.value);
+    } else {
+      post.tags = post.tags.filter((tag) => tag.id !== e.target.value.id);
+    }
+  };
+
   return (
-    <Modal show={true} size="xl">
+    <Modal show={true} fullscreen={true} enforceFocus={false}>
       <Toast ref={toast} />
       <ModalHeader>
-        <h5>VIEW OR UPDATE POST</h5>
+        UPDATE POST
         <CloseButton onClick={() => navigate("./..")} />
       </ModalHeader>
 
-      <ModalBody>
-        <Badge bg="danger">Title</Badge>
-        <input
-          onChange={(e) => setPost({ ...post, title: e.target.value })}
-          type="text"
-          className="form-control my-2 fw-bold"
-          defaultValue={post && post.title}
-        />
-
+      <ModalBody style={{ backgroundColor: "rgba(100,100,100,0.1)" }}>
         <div className="row">
-          <div className="col-md-6">
-            <Badge bg="danger">Cover</Badge>
+          <div className="col-md-3 bg-white py-4">
+            <Chip label={<b>Cover</b>} />
             <input
               onChange={handleChangeImage}
               type="file"
@@ -147,54 +229,139 @@ export default function AdminPostEdit() {
               className="form-control my-2"
             />
 
-            <Badge bg="danger" className="mb-2">
-              Tags
-            </Badge>
-            <MultipleSelectTags
-              initTags={post && post.tags}
-              handleChooseTags={(tags) => setPost({ ...post, tags: tags })}
-            />
+            <div className="col-6">
+              <Chip label={<b>Preview Cover</b>} />
 
-            <Badge bg="danger" className="mb-2">
-              New tag
-            </Badge>
+              <img
+                ref={previewedImage}
+                src={
+                  (post && post.image && imageURL + post.image) ||
+                  "../../../src/posts/default.jpg"
+                }
+                alt=""
+                className="img-fluid mt-2"
+              />
+            </div>
+
+            <Chip className="m-1" label={<b>Tags</b>} />
+            <div className="tags mb-2">
+              {tags &&
+                tags.map((tag, index) => (
+                  <Chip
+                    className="m-1"
+                    key={index}
+                    label={
+                      <Checkbox
+                        value={tag}
+                        defaultChecked={
+                          post &&
+                          post.tags &&
+                          post.tags.find((pTag) => pTag.id === tag.id)
+                        }
+                        size="small"
+                        onChange={handleSelectTags}
+                      >
+                        {tag.name}
+                      </Checkbox>
+                    }
+                  />
+                ))}
+            </div>
+
+            <Chip label={<b>New Tag</b>} />
             <input
               onChange={(e) => setPost({ ...post, newTag: e.target.value })}
               type="text"
               className="form-control my-2"
               placeholder="Enter new tag"
             />
-          </div>
-          <div className="col-md-6">
-            <Badge bg="danger">Preview</Badge>
-            <img
-              ref={previewedImage}
-              src={post && post.image && imageURL + post.image}
-              alt={"Post's cover"}
-              className="img-fluid mt-2"
+
+            <Chip
+              label={
+                <b>
+                  Templates <i>(Suggestion only)</i>
+                </b>
+              }
             />
+            <br />
+            <small>
+              <i>
+                As soon as you choose a template, the current content is no
+                longer displayed
+              </i>
+            </small>
+            <select
+              onChange={(e) => {
+                setPost({ ...post, content: e.target.value });
+                contentEditor.current.editor.setContent(e.target.value);
+              }}
+              className="form-control"
+            >
+              {templates &&
+                templates.map((template) => (
+                  <option key={template.id} value={template.content}>
+                    {template.name}
+                  </option>
+                ))}
+            </select>
+          </div>
+
+          <div className="col-md-9">
+            <div className="row">
+              <div className="col-12">
+                <Chip label={<b>Title</b>} />
+                <input
+                  onChange={(e) => setPost({ ...post, title: e.target.value })}
+                  type="text"
+                  defaultValue={post && post.title}
+                  className="form-control my-2 fw-bold"
+                />
+              </div>
+
+              <div className="col-md-12">
+                <Chip label={<b>Content</b>} className="m-1" />
+
+                <Editor
+                  ref={contentEditor}
+                  apiKey={
+                    configs?.find((config) => config.key === "EDITOR_API_KEY")
+                      ?.value ||
+                    "8gjew3xfjqt5cu2flsa3nz2oqr4z5bru9hr3phl05rsfyss3"
+                  }
+                  init={{
+                    plugins:
+                      "anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount linkchecker",
+                    toolbar:
+                      "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat",
+                  }}
+                  initialValue={post?.content}
+                  onChange={handleEditorChange}
+                />
+              </div>
+
+              <div className="col-12">
+                <Chip
+                  label={
+                    <b>
+                      AI generator <i>(Suggestion only)</i>
+                    </b>
+                  }
+                  className="m-1"
+                />
+                <textarea
+                  readOnly={true}
+                  ref={aiRef}
+                  className="form-control"
+                  rows={20}
+                ></textarea>
+              </div>
+            </div>
           </div>
         </div>
-
-        <Badge bg="danger" className="mb-2">
-          Content
-        </Badge>
-        <Editor
-          ref={contentEditor}
-          apiKey="8gjew3xfjqt5cu2flsa3nz2oqr4z5bru9hr3phl05rsfyss3"
-          init={{
-            plugins:
-              "anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount linkchecker",
-            toolbar:
-              "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat",
-          }}
-          onChange={handleEditorChange}
-          initialValue={post && post.content}
-        />
       </ModalBody>
 
-      <ModalFooter>
-        <button onClick={handlePost} className="btn btn-danger">
+      <ModalFooter className="d-block text-center">
+        <button className="btn text-danger" onClick={handlePost}>
           Save changes
         </button>
       </ModalFooter>

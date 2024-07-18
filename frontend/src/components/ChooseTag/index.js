@@ -9,8 +9,8 @@ import Chip from "@mui/material/Chip";
 import { useEffect, useState } from "react";
 import { apiURL } from "../../App";
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
+const ITEM_HEIGHT = 50;
+const ITEM_PADDING_TOP = 3;
 const MenuProps = {
   PaperProps: {
     style: {
@@ -20,20 +20,13 @@ const MenuProps = {
   },
 };
 
-function getStyles(name, personName, theme) {
-  return {
-    fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
-
-export default function MultipleSelectTags({ handleChooseTags, initTags }) {
+export default function MultipleSelectTags({
+  handleChooseTags,
+  initTags = [],
+}) {
   //states
-  const theme = useTheme();
   const [tags, setTags] = useState([]);
-  const [selectedTags, setSelectedTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState(initTags);
 
   //effects
   useEffect(() => {
@@ -79,21 +72,20 @@ export default function MultipleSelectTags({ handleChooseTags, initTags }) {
   return (
     <div>
       <FormControl sx={{ m: 1, width: "100%" }}>
-        <InputLabel id="tag-multiple-chip-label" error>
-          Tags
+        <InputLabel id="tag-multiple-chip-label">
+          <Chip label={<b>Tags</b>} />
         </InputLabel>
         <Select
           labelId="tag-multiple-chip-label"
           id="tag-multiple-chip"
           multiple
           value={selectedTags}
-          defaultValue={initTags}
           onChange={handleChange}
           input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
           renderValue={(selected) => (
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
               {selected.map((tag) => (
-                <Chip key={tag.id} label={tag.name} />
+                <Chip className="my-1" key={tag.id} label={tag.name} />
               ))}
             </Box>
           )}
@@ -101,11 +93,7 @@ export default function MultipleSelectTags({ handleChooseTags, initTags }) {
         >
           {tags &&
             tags.map((tag) => (
-              <MenuItem
-                key={tag.id}
-                value={tag}
-                style={getStyles(tag.name, selectedTags, theme)}
-              >
+              <MenuItem key={tag.id} value={tag}>
                 {tag.name}
               </MenuItem>
             ))}

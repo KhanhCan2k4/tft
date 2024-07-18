@@ -1,19 +1,57 @@
-import { Avatar, Chip } from "@mui/material";
+import { Chip } from "@mui/material";
+import { TFT_COMMENTS_THREATS, getShortDate } from "../../App";
+import { CloseButton } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Popconfirm } from "antd";
 
-export default function Comment({comment, beLongsToMe = false }) {
+export default function Comment({ comment, handleRemove, isAdmin = false }) {
+  //states
+  const [comments, setComments] = useState([]);
+
+  const handleRemoveComment = () => {
+    setComments(comments.filter((id) => id !== comment.id));
+
+    localStorage.setItem(TFT_COMMENTS_THREATS, JSON.stringify(comments));
+
+    handleRemove(comment.id);
+  };
+
+  //effects
+  //get comment ids from local storage
+  useEffect(() => {
+    const comments =
+      JSON.parse(localStorage.getItem(TFT_COMMENTS_THREATS)) ?? [];
+    setComments(comments);
+  }, []);
+
   return (
-    <div className="comment mb-3">
-      <div className="row">
-        <div className={"col-2" + (beLongsToMe? " order-2" : "")}>
-          <Avatar alt={comment && ""}></Avatar>
-          <small>
-            <Chip className="mt-1" label="Hihi" />
-          </small>
-        </div>
-        <div className={"col-10" + (beLongsToMe? " order-1" : "")}>
-          <textarea readOnly className="form-control">{comment && comment.content}</textarea>
-          <Chip className="mt-1" label={comment && comment.created_at} />
-        </div>
+    <div className="form-control mt-3">
+      {((comments && comments.includes(comment.id)) ||
+        isAdmin ||
+        window.location.href.includes("admin")) && (
+        <Popconfirm
+          title="Remove item"
+          description="Are you sure you want to remove this one?"
+          onConfirm={handleRemoveComment}
+          okText="Remove"
+          cancelText="Cancel"
+        >
+          <CloseButton
+            style={{ fontSize: "0.5em" }}
+            className="ms-auto d-block"
+          />
+        </Popconfirm>
+      )}
+      {comment && comment.content}
+      <br />
+      <div className="text-end">
+        <Chip
+          className="m-1 ms-auto"
+          size="small"
+          label={
+            comment && comment.created_at && getShortDate(comment.created_at)
+          }
+        />
       </div>
     </div>
   );

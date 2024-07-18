@@ -1,6 +1,10 @@
 :root {
   --dice-size: 200px;
   --app-btn-color: rgb(235, 58, 87);
+  --system-white: #F5F5F5;
+  --system-red: #F05454;
+  --system-navy: #30475E;
+  --system-black: #121212;
 }
 
 * {
@@ -12,12 +16,14 @@ body, html {
   padding: 0;
   width: 100%;
   height: 100%;
-  -ms-overflow-style: none;  /* Internet Explorer 10+ */
-  scrollbar-width: none; 
+  -ms-overflow-style: none;
+  /* Internet Explorer 10+ */
+  scrollbar-width: none;
 }
 
-body::-webkit-scrollbar { 
-  display: none;  /* Safari and Chrome */
+body::-webkit-scrollbar {
+  display: none;
+  /* Safari and Chrome */
 }
 
 body {
@@ -38,6 +44,31 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.p-toast:has(.p-toast-message-content) {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border-left: 5px solid var(--system-navy);
+  z-index: 1000000;
+}
+
+.p-toast:has(.p-toast-message.p-toast-message-error .p-toast-message-content) {
+  border-left-color: var(--system-red);
+  color: var(--system-red);
+}
+
+.p-toast:has(.p-toast-message.p-toast-message-success .p-toast-message-content) {
+  border-left-color: teal;
+  color: teal;
+
+}
+
+.p-toast:has(.p-toast-message-content) .p-toast-summary {
+  font-weight: bold;
+}
+
+.p-toast svg {
+  margin: 10px;
 }
 
 .p-toast-message-content {
@@ -321,15 +352,138 @@ footer a {
   overflow-y: auto;
 }
 
-body:has(.stack-page) {
-  background-color: #000;
-  padding: 0 20px;
-}
-
 .stack-page {
-  transform: translateY(10px);
   padding: 0 20px;
   border-radius: 20px;
   overflow: hidden;
-  animation: stackUppearance 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  position: relative;
+}
+
+.s.bg-white {
+  background-color: var(--system-white) !important;
+}
+
+.s.bg-red {
+  background-color: var(--system-red) !important;
+}
+
+.s.bg-primary {
+  background-color: var(--system-navy) !important;
+}
+
+.s.bg-dark {
+  background-color: var(--system-black) !important;
+}
+
+.s.text-white {
+  color: var(--system-white) !important;
+}
+
+.s.text-red {
+  color: var(--system-red) !important;
+}
+
+.s.text-primary {
+  color: var(--system-navy) !important;
+}
+
+.s.text-dark {
+  color: var(--system-black) !important;
+}
+
+.btn {
+  background-color: var(--system-white) !important;
+  color: var(--system-navy) !important;
+  border-radius: 2000px;
+  position: relative;
+  font-weight: bold !important;
+  box-shadow: var(--system-navy) 0px 1px 2px;
+}
+
+.btn.text-danger,
+.btn.btn-danger, .btn.btn-outline-danger {
+  color: var(--system-red) !important;
+  box-shadow: var(--system-red) 0px 1px 2px;
+}
+
+.btn:hover, .btn.active {
+  scale: 1.1;
+  transform: translateY(-5px);
+  background-color: var(--system-white) !important;
+  color: var(--system-red) !important;
+}
+
+.btn:hover::before {
+  animation: spread 0.5s linear infinite;
+  z-index: -1;
+}
+
+.btn.active::after {
+  content: "👑";
+  position: absolute;
+  inset: 0;
+  top: -50%;
+  left: 0;
+  transform: translateY(-2px);
+}
+
+@keyframes spread {
+  0% {
+    opacity: 0.4;
+    scale: 1;
+  }
+
+  100% {
+    opacity: 0;
+    scale: 1.5;
+  }
+}
+
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: white;
+  opacity: 0.6;
+  filter: blur(1px);
+  border-radius: 2000px;
+  z-index: -1;
+}
+
+.bi.bi-heart-fill {
+  animation: like 1s ease-in-out both;
+}
+
+@keyframes like {
+  0% {
+    scale: 1;
+    opacity: 0;
+  }
+
+  50% {
+    scale: 1.2;
+    opacity: 1;
+  }
+
+  100% {
+    scale: 1;
+  }
+}
+
+@media only screen and (min-width: 765px) {
+  .ant-card {
+    padding: 0;
+    width: 100%;
+  }
+}
+
+@media only screen and (min-width: 576px) {
+  .ant-card {
+    padding: 0;
+    width: 100%;
+  }
+
+  .container, .container-sm {
+    max-width: unset;
+  }
 }

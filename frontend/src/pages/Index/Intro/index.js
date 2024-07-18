@@ -1,17 +1,23 @@
 import { Link } from "react-router-dom";
 import CarouselBanner from "../../../components/CarouselBanner";
-import { useEffect, useRef, useState } from "react";
-import { apiURL, imageURL } from "../../../App";
+import { useContext, useEffect, useRef, useState } from "react";
+import { apiURL, ConfigContext, imageURL } from "../../../App";
 import "./styles.css";
 import { Parser } from "html-to-react";
+import ContactForm from "../../../components/ContactForm";
 
 export default function IntroSubPage() {
   //refs
   const homeBanner = useRef();
+  const configs = useContext(ConfigContext);
 
   //states
   const [banners, setBanners] = useState([]);
   const [post, setPost] = useState();
+
+  useEffect(() => {
+    document.title = "Giới thiệu chương trình CNTT TFT";
+  }, []);
 
   //fetch banners
   useEffect(() => {
@@ -64,15 +70,17 @@ export default function IntroSubPage() {
   };
 
   return (
-    <div className="p-5">
+    <div className="p-sm-5">
       <div className="page-content">
-        <div className="row mt-5">
-          <div className="col-md-6">
-            <div className="banner">
-              <CarouselBanner banners={banners} />
+        <div className="row mt-lg-1 mt-5">
+          {banners && banners.length > 0 && (
+            <div className="col-xl col-12">
+              <div className="banner">
+                <CarouselBanner banners={banners} />
+              </div>
             </div>
-          </div>
-          <div className="text-container col-md-6">
+          )}
+          <div className="text-container col-xl col-12">
             <div className="home-intro">
               <h3 className="title">
                 <span>Chương trình</span>
@@ -90,66 +98,46 @@ export default function IntroSubPage() {
               target="_blank"
               rel="noreferrer"
               href={
-                "http://fit.tdc.edu.vn/tin-tuc/fit-tdc-tuyen-sinh-chuong-trinh-cong-nghe-thong-tin-gan-ket-voi-doi-tac-nhat-ban"
+                configs?.find((config) => config.key === "TFT_INFO_LINK")?.value
               }
-              className="btn-view"
+              className="btn bg-red s text-white mx-2"
             >
               Tìm hiểu thêm
             </a>
 
-            <Link to={"/chuong-trinh-dao-tao"} className="btn-view">
+            <Link
+              to={"/chuong-trinh-dao-tao"}
+              className="btn bg-red s text-white mx-2"
+            >
               Xem chương trình đào tạo
             </Link>
           </div>
+
           <div className="col-12 mt-5">
             <div className="row sub-contain">
               <div className="col"></div>
-              <div className="col sub-item">
-                <span className="py-3">
-                  Hỗ trợ
-                  <br />
-                  <b>¥5000/tháng</b>
-                </span>
-              </div>
-              <div className="col sub-item">
-                <span className="py-3">
-                  Miễn phí
-                  <br />
-                  <b>600 giờ học tiếng Nhật</b>
-                </span>
-              </div>
-              <div className="col sub-item">
-                <span className="py-3">
-                  Chỉ tiêu
-                  <br />
-                  <b>30 sinh viên/khoá</b>
-                </span>
-              </div>
-              <div className="col sub-item reverse">
-                <span className="py-3">
-                  Đảm bảo
-                  <br />
-                  <b>100% có việc làm</b>
-                </span>
-              </div>
-              <div className="col sub-item reverse">
-                <span className="py-3">
-                  Đào tạo
-                  <br />
-                  <b>Thời gian đào tạo 3 năm</b>
-                </span>
-              </div>
-              <div className="col sub-item reverse">
-                <span className="py-3">
-                  Cam kết
-                  <br />
-                  <b>Làm việc 3 năm tại Nhật</b>
-                </span>
-              </div>
+
+              {[1, 2, 3, 4, 5, 6].map((index) => (
+                <div
+                  className={
+                    "col-lg col-sm-4 sub-item " + (index >= 4 ? "reverse" : "")
+                  }
+                >
+                  <span className="py-3">
+                    {Parser().parse(
+                      configs?.find(
+                        (config) => config.key === `TFT_INTRO_INFO_${index}`
+                      )?.value
+                    )}
+                  </span>
+                </div>
+              ))}
+
               <div className="col"></div>
             </div>
           </div>
         </div>
+        <ContactForm />
       </div>
     </div>
   );

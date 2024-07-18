@@ -1,49 +1,43 @@
-import { useState } from "react";
-import Tooltip from "@mui/material/Tooltip";
 import "./styles.css";
-import { Avatar } from "@mui/material";
 import { imageURL } from "../../App";
+import { PersonCircle } from "react-bootstrap-icons";
+import { Card } from "antd";
+import { Tooltip } from "@mui/material";
 
 export default function ApploadUser({ user, rank }) {
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
   return (
     <div className="appload-user">
-      { user && (
-        <div
-          onMouseEnter={handleOpen}
-          onMouseLeave={handleClose}
-          className="appload-user"
-        >
-          <Tooltip title={"Top " + rank}>
-            <div className={"rank rank-" + rank}></div>
-            {/* <Avatar className="avatar"/> */}
-            <img className="avatar"  src={user && user.avatar && imageURL + user.avatar || ""} alt="" />
-          </Tooltip>
-          {open && <Modal user={user}/>}
+      {(user && (
+        <div className="appload-user">
+          <>
+            <Tooltip title={"Top " + (rank ?? "chưa xác định")}>
+              <div className={"rank rank-" + rank}></div>
+              {(user && user.avatar && user.avatar && (
+                <img
+                  className="avatar"
+                  src={imageURL + user.avatar}
+                  alt="Ảnh đại diện"
+                />
+              )) || <PersonCircle className="avatar" />}
+            </Tooltip>
+          </>
+
+          <div>
+            <Card className="appload-user-modal text-center">
+              <i>Sinh viên </i>
+              <br />
+              <b>{user && user.name}</b>
+              <Card className="appload-user-modal-body text-start">
+                {user && user.achievements}
+              </Card>
+            </Card>
+          </div>
         </div>
-      ) || (
+      )) || (
         <div className="appload-user">
           <div className={"empty rank rank-" + rank}></div>
         </div>
       )}
-    </div>
-  );
-}
-
-function Modal({user}) {
-  return (
-    <div className="appload-user-modal">
-      <h5 className="modal-title" id="exampleModalLabel">
-        <i>Sinh viên</i>
-        <br /> <b>{user && user.name}</b>
-      </h5>
-      <hr />
-
-      <p className="modal-body">
-        {user && user.achievements}
-      </p>
     </div>
   );
 }

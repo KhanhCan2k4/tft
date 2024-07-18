@@ -1,13 +1,22 @@
-.stack-index section.intro-section {
-    background-image: url("../../../../public/src/backgrounds/intro-bg.jpg");
-}
-
 .stack-index section.intro-section .banner {
     animation: uppear 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 .stack-index section.intro-section .text-container {
     animation: fromLeft 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) backwards;
+    position: relative;
+    height: 50vh;
+}
+
+.stack-index section.intro-section .text-container .text {
+    height: 70%;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.stack-index section.intro-section .text-container .text::-webkit-scrollbar {
+    display: none;
 }
 
 .stack-index section.intro-section .text-container h3,
@@ -48,8 +57,6 @@
     bottom: 0;
     border-radius: 10px;
     box-shadow: -25px 23px 5px 0px rgba(0, 0, 0, 0.58);
-    -webkit-box-shadow: -25px 23px 5px 0px rgba(0, 0, 0, 0.58);
-    -moz-box-shadow: -25px 23px 5px 0px rgba(0, 0, 0, 0.58);
 }
 
 .stack-index .item-page .banner .carousel-banner img,
@@ -72,7 +79,6 @@
     padding: 5px 20px;
     color: white;
     border-radius: 20px;
-    
 }
 
 .stack-index section.intro-section .btn-view:hover {
@@ -112,4 +118,21 @@
 
 .stack-index section.intro-section .sub-item.reverse:hover {
     transform: rotateX(0deg) rotateY(-20deg) translateZ(100px);
+}
+
+@media only screen and (max-width: 1200px) {
+    .stack-index section.intro-section .text-container {
+        height: auto;
+    }
+
+    .stack-index section.intro-section .text-container .text {
+        height: unset;
+        max-height: 70%;
+    }
+}
+
+@media only screen and (max-width: 992px) {
+    .stack-index section.intro-section .sub-contain {
+        perspective: unset;
+    }
 }

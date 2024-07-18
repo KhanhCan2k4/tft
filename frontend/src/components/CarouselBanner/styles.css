@@ -1,0 +1,9 @@
+.carousel-banner .carousel-inner .carousel-item {
+    height: 50vh;
+}
+
+@media screen and (max-width: 480px) {
+    .stack-index section.intro-section .text-container .text {
+        height: auto;
+    }
+}

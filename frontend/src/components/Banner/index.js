@@ -1,5 +1,6 @@
 import { Popconfirm } from "antd";
 import { imageURL } from "../../App";
+import { Chip } from "@mui/material";
 
 export default function Banner({
   banner,
@@ -19,7 +20,8 @@ export default function Banner({
 
   return (
     <div className="banner mb-4 col-md-12">
-      <h4>#{banner.priority}</h4>
+      <Chip className="m-1" label={<b># {banner.priority}</b>} />
+
       <div className="row">
         <div className="col-md-8">
           <img
@@ -33,7 +35,7 @@ export default function Banner({
             <div className="col-12 my-3">
               <button
                 onClick={() => handleShow(banner)}
-                className="btn btn-dark"
+                className="btn"
               >
                 Change Image
               </button>
@@ -49,7 +51,7 @@ export default function Banner({
                 okText="Remove"
                 cancelText="Cancel"
               >
-                <button className="btn btn-danger">Remove</button>
+                <button className="btn text-danger">Remove</button>
               </Popconfirm>
             </div>
           </div>
